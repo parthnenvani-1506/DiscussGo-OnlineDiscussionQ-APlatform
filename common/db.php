@@ -1,6 +1,6 @@
 <?php
-    $host="localhost:3307";
-    //  $host="localhost";
+    // $host="localhost:3307";
+     $host="localhost";
     $username="root";
     $password=NULL;
     $database="discussgo";
