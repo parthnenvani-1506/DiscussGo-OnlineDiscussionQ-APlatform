@@ -147,12 +147,6 @@ Admin panel: `http://localhost/discussgo/admin`
 
 ---
 
-## 📸 Screenshots
-
->
-
----
-
 ## ⚠️ Security Notice
 
 > This project is intended for **educational/development purposes**.  
