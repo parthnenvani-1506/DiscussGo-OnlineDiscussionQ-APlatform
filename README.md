@@ -149,7 +149,7 @@ Admin panel: `http://localhost/discussgo/admin`
 
 ## 📸 Screenshots
 
-> _Add screenshots of your home page, question detail page, and admin dashboard here._
+>
 
 ---
 
