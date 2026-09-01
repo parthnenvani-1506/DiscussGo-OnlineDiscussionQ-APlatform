@@ -1,171 +1,135 @@
-<div align="center">
+# DiscussHub 🚀
 
-<img src="public/adminlogo2.jpeg" alt="DiscussGo Logo" width="100" height="100" style="border-radius: 50%;" />
-
-# 💬 DiscussGo
-
-**Real discussions. Real people. Real solutions.**
-
-A community-driven Q&A platform where users ask questions, share knowledge, and engage in meaningful discussions.
-
-[![PHP](https://img.shields.io/badge/PHP-8.x-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
-[![MySQL](https://img.shields.io/badge/MySQL-8.x-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
-[![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com)
-[![AdminLTE](https://img.shields.io/badge/AdminLTE-3.x-3C8DBC?style=for-the-badge&logo=adminlte&logoColor=white)](https://adminlte.io)
-
-</div>
+> **Intelligent Community Q&A & Discussion Platform**  
+> Built with Laravel 11 · MySQL 8 · Bootstrap 5 · Vanilla JS · Local Ollama LLM (`llama3.2:3b`)
 
 ---
 
-## ✨ Features
+## 🌟 Overview & Architecture
 
-### 👤 User Side
-- 🔐 **Authentication** — Signup, login, and logout with session management
-- ❓ **Ask Questions** — Post questions with category tags and rich descriptions
-- 💬 **Answer & Discuss** — Reply to questions, edit or delete your own answers
-- 👍 **Like System** — Like/unlike answers with live like counts
-- 🔍 **Search & Filter** — Search questions by title, filter by category
-- 🧑 **Profile Management** — Update username, city, and profile picture
-- 📬 **Contact Form** — Reach out via the built-in contact page
-- 🕐 **Latest Questions** — Dedicated feed for the most recent activity
+**DiscussHub** is a modernized, MCA-level developer community and discussion platform. It evolves standard Q&A forums with integrated, privacy-focused local AI models, mathematical TF-IDF semantic vector search, live duplicate detection, and automated solution synthesis.
 
-### 🛠️ Admin Panel
-- 📊 **Dashboard** — Live stats: total questions, users, categories, and answers
-- 👥 **User Management** — Search, block, or remove users
-- 📋 **Question Management** — Filter by category or user, delete content
-- 💡 **Answer Management** — View all answers or drill down by question
-- 🗂️ **Category CRUD** — Create, edit, and delete categories inline
+### Key Capabilities:
+- 🤖 **Local AI Engine**: Integrated with local Ollama (`llama3.2:3b`) for zero-cost, privacy-first answer summaries & moderation with smart heuristic fallbacks.
+- 🔍 **Real-Time Duplicate Prevention**: TF-IDF cosine similarity analyzes questions on-the-fly as you type to prevent duplicate threads.
+- 🏷️ **AI Semantic Tag Extraction**: Automatically recommends relevant taxonomy tags based on question title & code description.
+- 📊 **Real-time Quality Scorer**: Dynamic evaluation meter giving developers instant feedback on phrasing, code blocks, and detail before submitting.
+- ⭐ **Gamified Reputation & Badges**: Tiered developer leveling (`newcomer` → `contributor` → `experienced` → `expert` → `mentor`), automatic badge unlocking, and points audit trail.
+- 🛡️ **Comprehensive Admin Center**: Complete administrative control with live telemetry, Chart.js analytics, user moderation, tag merging, and audit trail logging.
+- 🌓 **Dark & Light Mode**: Custom design system with instant theme switching and responsive support down to 375px.
 
 ---
 
-## 🗂️ Project Structure
+## 🛠️ Technology Stack
 
-```
-discussgo/
-├── 📁 admin/                  # Admin panel (AdminLTE)
-│   ├── index.php              # Dashboard with stats
-│   ├── login.php              # Admin authentication
-│   ├── manage_users.php       # User management
-│   ├── manage_questions.php   # Question management
-│   ├── manage_answers.php     # Answer management
-│   ├── manage_categories.php  # Category CRUD
-│   └── includes/              # Shared header/footer
-│
-├── 📁 client/                 # User-facing views
-│   ├── questions.php          # Question listing
-│   ├── question_details.php   # Single question view
-│   ├── answers.php            # Answers display
-│   ├── profile.php            # User profile page
-│   ├── login.php              # Login form
-│   └── signup.php             # Registration form
-│
-├── 📁 common/                 # Shared utilities
-│   ├── db.php                 # Database connection
-│   └── time_ago_function.php  # Human-readable timestamps
-│
-├── 📁 server/
-│   └── request.php            # Central request handler (all POST/GET logic)
-│
-├── 📁 public/                 # Static assets
-│   ├── style.css              # Custom styles
-│   ├── script.js              # Client-side JS (likes, interactions)
-│   └── profiles/              # User uploaded profile images
-│
-└── index.php                  # Main entry point
-```
+- **Backend**: Laravel 11 (PHP 8.2+)
+- **Database**: MySQL 8 (Fulltext Boolean Indexing, JSON columns, Foreign Key cascades)
+- **AI / NLP**: Ollama (`llama3.2:3b`), Custom PHP TF-IDF Cosine Similarity Engine
+- **Frontend**: Blade Components, Bootstrap 5, Bootstrap Icons, Custom CSS Design Tokens, Vanilla JS (Fetch API)
+- **Charts**: Chart.js 4.x
 
 ---
 
-## 🗄️ Database Schema
+## 📁 Database Schema & Models
 
-| Table | Description |
-|---|---|
-| `users` | Registered users with profile info |
-| `questions` | Questions with title, description, category |
-| `answers` | Answers linked to questions and users |
-| `category` | Question categories |
-| `answer_likes` | Junction table for answer likes |
-| `contact_messages` | Messages from the contact form |
-| `admins` | Admin credentials |
+DiscussHub features 17 relational and polymorphic tables:
+1. `users`: Multi-level reputation, bio, avatar, suspended flag, legacy migration flags.
+2. `categories`: Discussion domains with custom color codes and icon classes.
+3. `tags`: Taxonomy tags with automated usage count tracking.
+4. `questions`: Full-text searchable discussions with view counts, AI summary cache, and pinned state.
+5. `question_tag`: Pivot relationship table.
+6. `answers`: Community solutions with accepted flag (`is_accepted`) and author references.
+7. `votes`: Polymorphic voting (+1 / -1) on questions and answers with denormalized score caching.
+8. `bookmarks`: Personal user reading lists.
+9. `notifications`: JSON-driven activity alerts (answer posted, solution accepted, upvote received, badge earned).
+10. `badges`: Achievement milestones with criteria strings.
+11. `user_badges`: Awarded user achievements.
+12. `reputation_transactions`: Immutable log of points awarded/deducted.
+13. `reports`: Polymorphic user reporting queue with administrative dismiss/delete actions.
+14. `audit_logs`: Immutable security audit trail of all administrative actions.
+15. `ai_requests`: Performance and latency telemetry for local AI model calls.
+16. `contact_messages`: Inquiries and support feedback.
+17. `admins`: Separate administrative authentication table with bcrypt security.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started & Installation
 
-### Prerequisites
-- [XAMPP](https://www.apachefriends.org/) or any PHP + MySQL environment
-- PHP 7.4+
-- MySQL 5.7+
+### 1. Prerequisites
+- **PHP** >= 8.2 with PDO, cURL, MBString extensions
+- **MySQL** >= 8.0 (or MariaDB 10.4+)
+- **Composer** >= 2.x
+- *(Optional for AI)* **Ollama** installed locally with `llama3.2:3b`
 
-### Installation
-
-**1. Clone the repository**
+### 2. Setup Environment
 ```bash
-git clone https://github.com/parthnenvani-1506/DiscussGo-OnlineDiscussionQ-APlatform.git
+# Clone or open the repository
+cd c:/xampp/htdocs/DiscussHub
+
+# Install Composer dependencies
+composer install
+
+# Configure Environment
+cp .env.example .env
 ```
 
-**2. Move to your web server root**
+Ensure your `.env` contains your database configuration:
+```env
+APP_NAME="DiscussHub"
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=DiscussHub_db
+DB_USERNAME=root
+DB_PASSWORD=
+
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=llama3.2:3b
+```
+
+### 3. Database Migration & Seeding
 ```bash
-# For XAMPP
-cp -r discussgo/ C:/xampp/htdocs/discussgo
+# Run fresh migrations and seed initial categories, tags, badges, and admin user
+php artisan migrate --seed
 ```
 
-**3. Create the database**
-
-Open phpMyAdmin and create a database named `discussgo`, then import the SQL file:
+### 4. Running Local AI (Optional)
+To enable local LLM summarization and AI moderation:
 ```bash
-mysql -u root -p discussgo < discussgo.sql
+# In a separate terminal
+ollama run llama3.2:3b
 ```
+*(Note: If Ollama is not running, the application automatically falls back to heuristic extraction without any downtime.)*
 
-**4. Configure the database connection**
-
-Edit `common/db.php`:
-```php
-$host     = "localhost";   // or localhost:3307 for XAMPP
-$username = "root";
-$password = "";
-$database = "discussgo";
+### 5. Start Development Server
+```bash
+php artisan serve
 ```
-
-**5. Run the app**
-
-Visit: `http://localhost/discussgo`  
-Admin panel: `http://localhost/discussgo/admin`
+Visit the application at: **`http://localhost:8000`**
 
 ---
 
-## 🖥️ Tech Stack
+## 🔑 Default Credentials
 
-| Layer | Technology |
-|---|---|
-| Backend | PHP (procedural) |
-| Database | MySQL via `mysqli` |
-| Frontend | HTML5, CSS3, Bootstrap 5.3 |
-| Admin UI | AdminLTE 3 |
-| Icons | Font Awesome, Ionicons |
-| JavaScript | Vanilla JS |
+### Admin Control Center
+- **URL**: `http://localhost:8000/admin/login`
+- **Email**: `admin@discusshub.ai`
+- **Password**: `admin123`
+
+### Moderator Account
+- **Email**: `moderator@discusshub.ai`
+- **Password**: `mod123456`
 
 ---
 
-## ⚠️ Security Notice
+## 🧪 Automated Testing
 
-> This project is intended for **educational/development purposes**.  
-> Before deploying to production, consider:
-> - Replacing MD5 password hashing with `password_hash()` / `password_verify()`
-> - Using prepared statements throughout the admin panel
-> - Adding CSRF protection to all forms
-> - Validating and sanitizing all user inputs server-side
+Run the automated test suite verifying all core feature domains:
+```bash
+php artisan test
+```
 
 ---
 
 ## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
----
-
-<div align="center">
-
-Made with ❤️ by [parthnenvani-1506](https://github.com/parthnenvani-1506)
-
-</div>
+This project is open-source software built for educational and portfolio demonstration.
