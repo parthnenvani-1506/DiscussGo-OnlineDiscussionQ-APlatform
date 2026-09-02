@@ -46,6 +46,11 @@
 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
                     <li class="nav-item">
+                        <a class="nav-link px-3 {{ request()->routeIs('home') ? 'active fw-semibold text-primary' : 'text-secondary' }}" href="{{ route('home') }}">
+                            <i class="bi bi-house me-1"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link px-3 {{ request()->routeIs('questions.*') ? 'active fw-semibold text-primary' : 'text-secondary' }}" href="{{ route('questions.index') }}">
                             <i class="bi bi-chat-left-text me-1"></i> Discussions
                         </a>
@@ -58,6 +63,11 @@
                     <li class="nav-item">
                         <a class="nav-link px-3 {{ request()->routeIs('tags.*') ? 'active fw-semibold text-primary' : 'text-secondary' }}" href="{{ route('tags.index') }}">
                             <i class="bi bi-tags me-1"></i> Tags
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 {{ request()->routeIs('contact.*') ? 'active fw-semibold text-primary' : 'text-secondary' }}" href="{{ route('contact.show') }}">
+                            <i class="bi bi-envelope me-1"></i> Contact Us
                         </a>
                     </li>
                 </ul>
