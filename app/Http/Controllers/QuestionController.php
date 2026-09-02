@@ -139,7 +139,7 @@ class QuestionController extends Controller
             Tag::whereIn('id', $tagIds)->increment('usage_count');
         }
 
-        $this->reputationService->award($user, 'Asked a question: ' . Str::limit($question->title, 30), 5, $question);
+        $this->reputationService->award($user, 'Asked a question: ' . Str::limit($question->title, 30), \App\Models\ReputationSetting::pointsFor('ask_question', 5), $question);
         $this->badgeService->checkAndAward($user);
 
         return redirect()->route('questions.show', [$question->id, $question->slug])
@@ -244,7 +244,7 @@ class QuestionController extends Controller
         $user = $question->user;
 
         // Deduct reputation
-        $this->reputationService->deduct($user, 'Deleted question: ' . Str::limit($question->title, 30), 5);
+        $this->reputationService->deduct($user, 'Deleted question: ' . Str::limit($question->title, 30), abs(\App\Models\ReputationSetting::pointsFor('delete_question', -5)));
 
         // Decrement tag usage counts
         $tagIds = $question->tags->pluck('id');

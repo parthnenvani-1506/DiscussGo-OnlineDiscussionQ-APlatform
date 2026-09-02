@@ -50,8 +50,8 @@ class AnswerController extends Controller
         // Increment answer count on question
         $question->increment('answer_count');
 
-        // Award reputation to answer author (+10)
-        $this->reputationService->award($user, 'Contributed an answer to: ' . Str::limit($question->title, 30), 10, $answer);
+        // Award reputation to answer author
+        $this->reputationService->award($user, 'Contributed an answer to: ' . Str::limit($question->title, 30), \App\Models\ReputationSetting::pointsFor('post_answer', 10), $answer);
 
         // Notify question owner if different from answerer
         if ($question->user_id !== $user->id) {
@@ -110,7 +110,7 @@ class AnswerController extends Controller
         $user = $answer->user;
 
         // Deduct reputation
-        $this->reputationService->deduct($user, 'Deleted answer on: ' . Str::limit($question->title, 30), 10);
+        $this->reputationService->deduct($user, 'Deleted answer on: ' . Str::limit($question->title, 30), abs(\App\Models\ReputationSetting::pointsFor('delete_answer', -10)));
 
         // Decrement answer count
         if ($question->answer_count > 0) {
@@ -148,7 +148,7 @@ class AnswerController extends Controller
                 'is_answered' => false,
                 'accepted_answer_id' => null,
             ]);
-            $this->reputationService->deduct($answerUser, 'Solution un-accepted on: ' . Str::limit($question->title, 30), 50);
+            $this->reputationService->deduct($answerUser, 'Solution un-accepted on: ' . Str::limit($question->title, 30), abs(\App\Models\ReputationSetting::pointsFor('answer_unaccepted', -50)));
 
             return back()->with('info', 'Answer is no longer marked as accepted solution.');
         } else {
@@ -161,8 +161,8 @@ class AnswerController extends Controller
                 'accepted_answer_id' => $answer->id,
             ]);
 
-            // Award +50 reputation to the answerer
-            $this->reputationService->award($answerUser, 'Solution accepted for: ' . Str::limit($question->title, 30), 50, $answer);
+            // Award +50 (or configured) reputation to the answerer
+            $this->reputationService->award($answerUser, 'Solution accepted for: ' . Str::limit($question->title, 30), \App\Models\ReputationSetting::pointsFor('answer_accepted', 50), $answer);
 
             // Notify answer author
             $this->notificationService->answerAccepted($answer);

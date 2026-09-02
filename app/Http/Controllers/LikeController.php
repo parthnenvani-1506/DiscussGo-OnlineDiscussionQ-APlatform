@@ -58,7 +58,9 @@ class LikeController extends Controller
             $existingLike->delete();
 
             // Revert reputation
-            $points = ($type === 'answer') ? 5 : 3;
+            $points = ($type === 'answer')
+                ? abs(\App\Models\ReputationSetting::pointsFor('unlike_answer', -5))
+                : abs(\App\Models\ReputationSetting::pointsFor('unlike_question', -3));
             $this->reputationService->deduct($author, 'Like removed on ' . $type, $points);
 
             $liked = false;
@@ -71,8 +73,10 @@ class LikeController extends Controller
                 'value'        => 1,
             ]);
 
-            // Award reputation — answers get +5, questions get +3
-            $points = ($type === 'answer') ? 5 : 3;
+            // Award reputation — answers get configured points, questions get configured points
+            $points = ($type === 'answer')
+                ? \App\Models\ReputationSetting::pointsFor('like_answer', 5)
+                : \App\Models\ReputationSetting::pointsFor('like_question', 3);
             $this->reputationService->award($author, 'Received a like on ' . $type, $points, $likeable);
 
             // Notify content owner

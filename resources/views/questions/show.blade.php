@@ -321,12 +321,16 @@
 
                     <div class="mb-3">
                         {{-- Hidden textarea holds HTML for submission --}}
-                        <textarea name="answer" id="answer-textarea" class="d-none @error('answer') is-invalid @enderror" required>{{ old('answer') }}</textarea>
+                        <textarea name="answer" id="answer-textarea" class="d-none @error('answer') is-invalid @enderror"></textarea>
                         {{-- Quill mounts here --}}
-                        <div id="quill-answer-form"></div>
+                        <div id="quill-answer-form" style="min-height: 160px;"></div>
                         @error('answer')
                             <div class="text-danger small mt-1">{{ $message }}</div>
                         @enderror
+                        {{-- Client-side empty validation message --}}
+                        <div id="answer-empty-error" class="text-danger small mt-1 d-none">
+                            Please write an answer before submitting.
+                        </div>
                     </div>
 
                     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
@@ -476,9 +480,28 @@
     // Sync Quill HTML to hidden textarea on submit
     const postAnswerForm = document.getElementById('post-answer-form');
     if (postAnswerForm) {
-        postAnswerForm.addEventListener('submit', function() {
-            const html = quillAnswerForm.root.innerHTML;
-            document.getElementById('answer-textarea').value = (html === '<p><br></p>') ? '' : html;
+        postAnswerForm.addEventListener('submit', function(e) {
+            const html      = quillAnswerForm.root.innerHTML;
+            const isEmpty   = html === '<p><br></p>' || html.trim() === '' || quillAnswerForm.getText().trim().length === 0;
+            const errorDiv  = document.getElementById('answer-empty-error');
+
+            if (isEmpty) {
+                e.preventDefault();
+                errorDiv && errorDiv.classList.remove('d-none');
+                quillAnswerForm.root.focus();
+                return;
+            }
+
+            errorDiv && errorDiv.classList.add('d-none');
+            document.getElementById('answer-textarea').value = html;
+        });
+
+        // Hide error as soon as user starts typing
+        quillAnswerForm.on('text-change', function() {
+            const errorDiv = document.getElementById('answer-empty-error');
+            if (errorDiv && quillAnswerForm.getText().trim().length > 0) {
+                errorDiv.classList.add('d-none');
+            }
         });
     }
 

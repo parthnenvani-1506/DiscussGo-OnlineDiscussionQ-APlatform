@@ -205,6 +205,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/api/tags/duplicate-groups', [\App\Http\Controllers\Admin\TagMergeController::class, 'groups'])->name('admin.api.tags.groups');
         Route::post('/api/tags/merge', [\App\Http\Controllers\Admin\TagMergeController::class, 'merge'])->name('admin.api.tags.merge');
 
+        // Reputation Settings
+        Route::get('/reputation-settings', [\App\Http\Controllers\Admin\ReputationSettingsController::class, 'index'])->name('reputation-settings.index');
+        Route::post('/reputation-settings', [\App\Http\Controllers\Admin\ReputationSettingsController::class, 'update'])->name('reputation-settings.update');
+
         // Audit Logs & Analytics
         Route::get('/audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs.index');
         Route::get('/analytics', [AdminAnalyticsController::class, 'index'])->name('analytics.index');

@@ -111,6 +111,11 @@
                     <a href="{{ route('admin.moderators.index') }}" class="admin-nav-link {{ request()->routeIs('admin.moderators.*') ? 'active' : '' }}">
                         <i class="bi bi-shield-half text-warning"></i> Moderators
                     </a>
+
+                    <div class="small fw-bold text-muted text-uppercase mt-3 mb-2 px-2" style="font-size: 0.7rem;">Configuration</div>
+                    <a href="{{ route('admin.reputation-settings.index') }}" class="admin-nav-link {{ request()->routeIs('admin.reputation-settings.*') ? 'active' : '' }}">
+                        <i class="bi bi-stars text-warning"></i> Reputation Points
+                    </a>
                 </div>
             </div>
 
