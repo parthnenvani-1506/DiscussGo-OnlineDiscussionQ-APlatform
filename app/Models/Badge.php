@@ -16,6 +16,8 @@ class Badge extends Model
         'icon',
         'tier',
         'criteria',
+        'condition_type',
+        'condition_value',
     ];
 
     public function users(): BelongsToMany
