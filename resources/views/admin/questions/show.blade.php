@@ -20,7 +20,7 @@
 
 <div class="dg-card p-4 mb-4">
     <div class="d-flex align-items-center gap-2 mb-2">
-        <span class="badge" style="background: {{ $question->category->color }}15; color: {{ $question->category->color }};">
+        <span class="badge bg-primary-subtle text-primary border border-primary">
             {{ $question->category->name }}
         </span>
         @if($question->is_pinned)

@@ -43,7 +43,7 @@ class DiscussHubFeatureTest extends TestCase
 
         $this->category = Category::firstOrCreate(
             ['slug' => 'test-category'],
-            ['name' => 'Test Category', 'icon' => 'bi bi-code', 'color' => '#2563eb']
+            ['name' => 'Test Category']
         );
 
         $this->tag = Tag::firstOrCreate(

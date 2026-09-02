@@ -27,7 +27,7 @@
 
                         <div class="flex-grow-1 min-w-0">
                             <div class="d-flex align-items-center gap-2 mb-1">
-                                <span class="badge" style="background: {{ $question->category->color }}15; color: {{ $question->category->color }};">
+                                <span class="badge bg-primary-subtle text-primary border border-primary">
                                     {{ $question->category->name }}
                                 </span>
                                 @if($question->is_answered)

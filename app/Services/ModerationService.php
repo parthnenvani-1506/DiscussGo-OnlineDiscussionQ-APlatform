@@ -10,6 +10,11 @@ class ModerationService
 
     /**
      * Check if text contains spam or offensive content.
+     * Score ranges:
+     *   0.05 = clean
+     *   0.55 = mild flag (1 keyword) — saved but sent to moderator queue
+     *   0.75 = moderate flag (2 keywords) — saved but sent to moderator queue
+     *   0.90 = severe flag (3+ keywords or spam) — blocked outright
      */
     public function checkContent(string $text): array
     {
@@ -18,14 +23,18 @@ class ModerationService
         $matchedWords = [];
         $reason = null;
 
-        // Check suspicious spam patterns (excessive links)
+        // Check suspicious spam patterns (excessive links) — severe, block it
         $linkCount = preg_match_all('/https?:\/\/[^\s]+/i', $text, $matches);
         if ($linkCount > 4) {
-            $flagged = true;
-            $reason = 'spam';
+            return [
+                'flagged' => true,
+                'reason'  => 'spam',
+                'matched_words' => [],
+                'score'   => 0.90,
+            ];
         }
 
-        // Check toxic words
+        // Check toxic keywords
         foreach ($this->toxicKeywords as $word) {
             if (preg_match('/\b' . preg_quote($word, '/') . '\b/i', $clean)) {
                 $flagged = true;
@@ -34,11 +43,23 @@ class ModerationService
             }
         }
 
+        if (!$flagged) {
+            return ['flagged' => false, 'reason' => null, 'matched_words' => [], 'score' => 0.05];
+        }
+
+        // Score based on how many keywords matched
+        $count = count($matchedWords);
+        $score = match(true) {
+            $count >= 3 => 0.90, // severe — block
+            $count === 2 => 0.75, // moderate — flag for review
+            default      => 0.55, // mild — flag for review
+        };
+
         return [
-            'flagged' => $flagged,
-            'reason' => $reason,
+            'flagged'       => true,
+            'reason'        => $reason,
             'matched_words' => $matchedWords,
-            'score' => $flagged ? 0.85 : 0.05,
+            'score'         => $score,
         ];
     }
 }

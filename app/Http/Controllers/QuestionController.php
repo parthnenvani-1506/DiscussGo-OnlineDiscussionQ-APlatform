@@ -305,8 +305,6 @@ class QuestionController extends Controller
             'name'        => $newName,
             'slug'        => $slug,
             'description' => "Discussions about {$newName}.",
-            'color'       => '#2563eb',
-            'icon'        => 'bi bi-folder',
         ]);
 
         return $category->id;

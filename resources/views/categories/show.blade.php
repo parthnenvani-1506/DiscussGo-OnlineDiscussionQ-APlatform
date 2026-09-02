@@ -3,11 +3,11 @@
 @section('title', $category->name . ' Discussions - DiscussHub')
 
 @section('content')
-<div class="dg-card p-4 mb-4" style="background: linear-gradient(135deg, {{ $category->color }}08 0%, rgba(255,255,255,1) 100%);">
+<div class="dg-card p-4 mb-4">
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
         <div class="d-flex align-items-center gap-3">
-            <span class="p-3 rounded fs-3" style="background: {{ $category->color }}20; color: {{ $category->color }};">
-                <i class="{{ $category->icon }}"></i>
+            <span class="p-3 rounded fs-3 bg-primary-subtle text-primary">
+                <i class="bi bi-folder-fill"></i>
             </span>
             <div>
                 <h2 class="fw-bold text-dark mb-1">{{ $category->name }}</h2>

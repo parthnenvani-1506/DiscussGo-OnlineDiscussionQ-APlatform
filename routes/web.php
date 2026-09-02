@@ -157,6 +157,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Answer Management
         Route::get('/answers', [AdminAnswerController::class, 'index'])->name('answers.index');
+        Route::get('/answers/{answer}', [AdminAnswerController::class, 'show'])->name('answers.show');
         Route::delete('/answers/{answer}', [AdminAnswerController::class, 'destroy'])->name('answers.destroy');
 
         // Category Management

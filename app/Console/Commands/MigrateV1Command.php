@@ -67,11 +67,9 @@ class MigrateV1Command extends Command
                 $cat = Category::firstOrCreate(
                     ['name' => $oldCat->name],
                     [
-                        'name' => $oldCat->name,
-                        'slug' => Str::slug($oldCat->name),
+                        'name'        => $oldCat->name,
+                        'slug'        => Str::slug($oldCat->name),
                         'description' => "Discussions in {$oldCat->name}",
-                        'color' => '#3b82f6',
-                        'icon' => 'fas fa-folder',
                     ]
                 );
                 $catMap[$oldCat->id] = $cat->id;

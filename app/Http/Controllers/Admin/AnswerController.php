@@ -37,6 +37,15 @@ class AnswerController extends Controller
     }
 
     /**
+     * Show a single answer in full detail.
+     */
+    public function show(Answer $answer): View
+    {
+        $answer->load(['user', 'question.category', 'question.tags', 'question.user']);
+        return view('admin.answers.show', compact('answer'));
+    }
+
+    /**
      * Delete an answer from the platform.
      */
     public function destroy(Answer $answer): RedirectResponse

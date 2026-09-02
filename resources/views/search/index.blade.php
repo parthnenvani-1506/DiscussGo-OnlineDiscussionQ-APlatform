@@ -63,7 +63,7 @@
                     <div class="flex-grow-1 min-w-0">
                         <div class="d-flex align-items-center gap-2 mb-1">
                             <a href="{{ route('categories.show', $question->category->slug) }}" class="category-badge">
-                                <i class="{{ $question->category->icon ?? 'bi bi-folder' }} text-primary"></i> {{ $question->category->name }}
+                                <i class="bi bi-folder text-primary"></i> {{ $question->category->name }}
                             </a>
                         </div>
 

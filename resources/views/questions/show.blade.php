@@ -43,7 +43,7 @@
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
                 <div class="d-flex align-items-center gap-2">
                     <a href="{{ route('categories.show', $question->category->slug) }}" class="category-badge">
-                        <i class="{{ $question->category->icon ?? 'bi bi-folder' }} text-primary"></i> {{ $question->category->name }}
+                        <i class="bi bi-folder text-primary"></i> {{ $question->category->name }}
                     </a>
                     @if($question->is_answered)
                         <span class="badge bg-success-subtle text-success border border-success"><i class="bi bi-check-circle-fill me-1"></i> Solved</span>

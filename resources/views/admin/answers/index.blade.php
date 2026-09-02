@@ -43,7 +43,9 @@
                 @forelse($answers as $ans)
                     <tr>
                         <td class="text-truncate" style="max-width: 250px;">
-                            {{ Str::limit(strip_tags($ans->answer), 80) }}
+                            <a href="{{ route('admin.answers.show', $ans) }}" class="text-dark text-decoration-none">
+                                {{ Str::limit(strip_tags($ans->answer), 80) }}
+                            </a>
                         </td>
                         <td class="text-truncate" style="max-width: 200px;">
                             @if($ans->question)
@@ -67,13 +69,18 @@
                         </td>
                         <td class="text-muted">{{ $ans->created_at->format('M d, Y') }}</td>
                         <td class="text-end">
-                            <form action="{{ route('admin.answers.destroy', $ans) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this answer?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete answer">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
+                            <div class="d-inline-flex gap-1">
+                                <a href="{{ route('admin.answers.show', $ans) }}" class="btn btn-sm btn-outline-secondary" title="View full answer">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <form action="{{ route('admin.answers.destroy', $ans) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this answer?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete answer">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @empty

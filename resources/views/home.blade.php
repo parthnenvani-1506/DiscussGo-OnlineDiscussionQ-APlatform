@@ -170,7 +170,7 @@
                     <div class="flex-grow-1 min-w-0">
                         <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
                             <a href="{{ route('categories.show', $question->category->slug) }}" class="category-badge">
-                                <i class="{{ $question->category->icon ?? 'bi bi-folder' }} text-primary"></i> {{ $question->category->name }}
+                                <i class="bi bi-folder text-primary"></i> {{ $question->category->name }}
                             </a>
                             @if($question->is_pinned)
                                 <span class="badge bg-warning-subtle text-warning border border-warning"><i class="bi bi-pin-angle-fill"></i> Pinned</span>
@@ -274,8 +274,8 @@
                 @foreach($topCategories as $category)
                     <a href="{{ route('categories.show', $category->slug) }}" class="d-flex align-items-center justify-content-between text-decoration-none p-2 rounded bg-light border">
                         <div class="d-flex align-items-center gap-2">
-                            <span class="badge p-2 rounded" style="background: {{ $category->color }}15; color: {{ $category->color }};">
-                                <i class="{{ $category->icon ?? 'bi bi-folder' }}"></i>
+                            <span class="badge p-2 rounded bg-primary-subtle text-primary">
+                                <i class="bi bi-folder"></i>
                             </span>
                             <span class="fw-medium text-dark small">{{ $category->name }}</span>
                         </div>
