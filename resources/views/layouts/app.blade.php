@@ -31,7 +31,7 @@
 
     <!-- Top Navigation Bar -->
     <nav class="dg-navbar navbar navbar-expand-lg py-2">
-        <div class="container-fluid px-lg-4 px-3" style="max-width: 1440px;">
+        <div class="container-fluid px-4" style="max-width: 1440px;">
             <a class="dg-brand text-decoration-none d-inline-flex align-items-center" href="{{ route('home') }}">
                 <img src="{{ asset('logo.png') }}" alt="DiscussHub" class="dg-brand-logo">
             </a>
@@ -50,10 +50,10 @@
 
             <div class="collapse navbar-collapse" id="navbarContent">
                 <!-- Search bar with Keyboard Shortcut -->
-                <form action="{{ route('search') }}" method="GET" class="dg-search-box mx-lg-2 mx-xl-3 my-2 my-lg-0">
+                <form action="{{ route('search') }}" method="GET" class="dg-search-box ms-lg-2 me-lg-3 my-2 my-lg-0">
                     <i class="bi bi-search dg-search-icon"></i>
-                    <input type="text" name="q" class="dg-search-input" placeholder="Search questions, topics, answers, tags..." value="{{ request('q') }}">
-                    <kbd class="dg-search-kbd d-none d-md-inline-block">Ctrl K</kbd>
+                    <input type="text" name="q" class="dg-search-input" placeholder="Search discussions..." value="{{ request('q') }}">
+                    <kbd class="dg-search-kbd d-none d-xl-inline-block">Ctrl K</kbd>
                 </form>
 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
@@ -92,36 +92,43 @@
                     </button>
 
                     @auth
-                        <!-- Bookmarks -->
-                        <a href="{{ route('bookmarks.index') }}" class="dg-nav-icon-btn" title="Saved Discussions">
-                            <i class="bi bi-bookmark fs-5"></i>
-                        </a>
+                        <!-- Mobile Quick Actions: Bookmarks & Notifications in cohesive row -->
+                        <div class="dg-mobile-quick-actions d-flex align-items-center gap-2">
+                            <!-- Bookmarks -->
+                            <a href="{{ route('bookmarks.index') }}" class="dg-nav-icon-btn dg-mobile-action-pill" title="Saved Discussions">
+                                <i class="bi bi-bookmark fs-5"></i>
+                                <span class="d-lg-none ms-2 fw-medium">Saved</span>
+                            </a>
 
-                        <!-- Notifications Bell -->
-                        @php
-                            $unreadNotificationsCount = auth()->user()->unreadNotificationsCount();
-                        @endphp
-                        <a href="{{ route('notifications.index') }}" class="dg-nav-icon-btn position-relative" title="Notifications">
-                            <i class="bi bi-bell fs-5"></i>
-                            @if($unreadNotificationsCount > 0)
-                                <span class="dg-badge-radar badge rounded-pill">
-                                    {{ $unreadNotificationsCount }}
-                                </span>
-                            @endif
-                        </a>
+                            <!-- Notifications Bell -->
+                            @php
+                                $unreadNotificationsCount = auth()->user()->unreadNotificationsCount();
+                            @endphp
+                            <a href="{{ route('notifications.index') }}" class="dg-nav-icon-btn position-relative dg-mobile-action-pill" title="Notifications">
+                                <i class="bi bi-bell fs-5"></i>
+                                <span class="d-lg-none ms-2 fw-medium">Notifications</span>
+                                @if($unreadNotificationsCount > 0)
+                                    <span class="dg-badge-radar badge rounded-pill">
+                                        {{ $unreadNotificationsCount }}
+                                    </span>
+                                @endif
+                            </a>
+                        </div>
 
                         <!-- User Profile Dropdown -->
-                        <div class="dropdown">
-                            <button class="dg-user-pill border-0 btn" type="button" data-bs-toggle="dropdown">
-                                @if(auth()->user()->profile_image && auth()->user()->profile_image !== 'default_profile.png')
-                                    <img src="{{ asset('profiles/' . auth()->user()->profile_image) }}" class="rounded-circle object-fit-cover" width="28" height="28" alt="avatar">
-                                @else
-                                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 28px; height: 28px; font-size: 0.75rem;">
-                                        {{ strtoupper(substr(auth()->user()->user_name, 0, 1)) }}
-                                    </div>
-                                @endif
-                                <span class="fw-semibold small d-none d-md-inline">{{ auth()->user()->user_name }}</span>
-                                <span class="reputation-badge py-0 px-2 rep-badge-fmt"
+                        <div class="dropdown w-100 w-lg-auto">
+                            <button class="dg-user-pill border-0 btn w-100 justify-content-between justify-content-lg-start" type="button" data-bs-toggle="dropdown">
+                                <div class="d-flex align-items-center gap-2">
+                                    @if(auth()->user()->profile_image && auth()->user()->profile_image !== 'default_profile.png')
+                                        <img src="{{ asset('profiles/' . auth()->user()->profile_image) }}" class="rounded-circle object-fit-cover" width="28" height="28" alt="avatar">
+                                    @else
+                                        <div class="dg-user-avatar-initial">
+                                            {{ strtoupper(substr(auth()->user()->user_name, 0, 1)) }}
+                                        </div>
+                                    @endif
+                                    <span class="fw-semibold small text-truncate dg-user-name">{{ auth()->user()->user_name }}</span>
+                                </div>
+                                <span class="reputation-badge rep-badge-fmt ms-auto ms-lg-0"
                                     data-rep="{{ auth()->user()->reputation }}"
                                     data-bs-toggle="tooltip"
                                     data-bs-placement="bottom"
@@ -145,18 +152,20 @@
                         </div>
 
                         <!-- Ask Question CTA -->
-                        <a href="{{ route('questions.create') }}" class="dg-btn-cta">
+                        <a href="{{ route('questions.create') }}" class="dg-btn-cta w-100 w-lg-auto justify-content-center">
                             <i class="bi bi-plus-lg"></i> Ask Question
                         </a>
 
                         @if(auth()->user()->role === 'moderator')
-                            <a href="{{ route('moderator.dashboard') }}" class="btn btn-warning btn-sm rounded-pill px-3 fw-semibold d-inline-flex align-items-center gap-1">
+                            <a href="{{ route('moderator.dashboard') }}" class="btn btn-warning btn-sm rounded-pill px-3 fw-semibold d-inline-flex align-items-center justify-content-center gap-1 w-100 w-lg-auto">
                                 <i class="bi bi-shield-half"></i> Mod Panel
                             </a>
                         @endif
                     @else
-                        <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm fw-medium px-3 rounded-pill">Sign In</a>
-                        <a href="{{ route('register') }}" class="dg-btn-cta">Join Community</a>
+                        <div class="d-flex align-items-center gap-2 w-100 w-lg-auto">
+                            <a href="{{ route('login') }}" class="dg-btn-outline flex-fill text-center justify-content-center">Sign In</a>
+                            <a href="{{ route('register') }}" class="dg-btn-cta flex-fill text-center justify-content-center">Join Community</a>
+                        </div>
                     @endauth
                 </div>
             </div>

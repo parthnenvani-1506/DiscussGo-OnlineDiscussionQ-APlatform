@@ -24,7 +24,7 @@
             </p>
 
             <div class="d-flex flex-wrap align-items-center gap-3">
-                <a href="{{ route('questions.create') }}" class="btn btn-primary rounded-pill px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm">
+                <a href="{{ route('questions.create') }}" class="dg-btn-cta px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2 text-white text-decoration-none">
                     <i class="bi bi-plus-circle"></i> Ask a Question
                 </a>
                 <a href="{{ route('questions.index') }}" class="btn btn-outline-secondary rounded-pill px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2">
@@ -110,8 +110,8 @@
     <!-- Main Feed Column -->
     <div class="col-lg-8">
         <!-- Feed Filter Navigation Tabs -->
-        <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
-            <ul class="nav nav-pills gap-1">
+        <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2 overflow-x-auto">
+            <ul class="nav nav-pills gap-1 flex-nowrap flex-md-wrap">
                 @auth
                     <li class="nav-item">
                         <a class="nav-link rounded-pill py-1 px-3 small fw-medium {{ $feedFilter === 'recommended' ? 'active' : 'text-secondary' }}" href="{{ route('home', ['feed' => 'recommended']) }}">
@@ -234,7 +234,7 @@
                     @else
                         <h5 class="text-secondary fw-bold">No discussions found in this feed</h5>
                         <p class="small text-muted mb-4">Be the pioneer to start a discussion or ask a question.</p>
-                        <a href="{{ route('questions.create') }}" class="btn btn-primary rounded-pill px-4">
+                        <a href="{{ route('questions.create') }}" class="dg-btn-cta px-4 text-white text-decoration-none">
                             <i class="bi bi-plus-circle me-1"></i> Ask a Question
                         </a>
                     @endif

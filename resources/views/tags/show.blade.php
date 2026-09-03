@@ -14,7 +14,7 @@
         </div>
 
         @auth
-            <a href="{{ route('questions.create') }}" class="btn-primary-dg">
+            <a href="{{ route('questions.create') }}" class="dg-btn-cta px-3 py-2 text-white text-decoration-none">
                 <i class="bi bi-plus-circle"></i> Ask with #{{ $tag->name }}
             </a>
         @endauth
@@ -60,7 +60,7 @@
             <i class="bi bi-tags text-muted display-4"></i>
             <h5 class="mt-3 text-secondary">No questions tagged with #{{ $tag->name }} yet</h5>
             <p class="small text-muted mb-3">Be the first to post a discussion using this tag.</p>
-            <a href="{{ route('questions.create') }}" class="btn-primary-dg"><i class="bi bi-plus-circle"></i> Ask Question</a>
+            <a href="{{ route('questions.create') }}" class="dg-btn-cta px-3 py-2 text-white text-decoration-none"><i class="bi bi-plus-circle"></i> Ask Question</a>
         </div>
     @endforelse
 </div>

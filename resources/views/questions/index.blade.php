@@ -12,7 +12,7 @@
                 <p class="text-secondary small mb-0">{{ $questions->total() }} technical discussions across all categories</p>
             </div>
             @auth
-                <a href="{{ route('questions.create') }}" class="btn btn-primary rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-1 flex-shrink-0">
+                <a href="{{ route('questions.create') }}" class="dg-btn-cta px-3 py-2 fw-semibold d-inline-flex align-items-center gap-1 flex-shrink-0 text-white text-decoration-none">
                     <i class="bi bi-plus-circle"></i> Ask Question
                 </a>
             @endauth

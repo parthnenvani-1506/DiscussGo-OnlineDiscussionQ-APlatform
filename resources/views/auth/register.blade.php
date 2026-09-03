@@ -58,7 +58,7 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold rounded-pill mb-3">
+    <button type="submit" class="dg-btn-cta border-0 w-100 py-2 fw-semibold mb-3 text-white justify-content-center">
         <i class="bi bi-person-plus me-1"></i> Register & Get 10 Pts
     </button>
 

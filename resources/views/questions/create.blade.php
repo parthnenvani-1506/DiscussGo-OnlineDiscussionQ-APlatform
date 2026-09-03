@@ -311,7 +311,7 @@
 
             {{-- Submit --}}
             <div class="d-flex align-items-center gap-3 mb-5">
-                <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 fw-semibold">
+                <button type="submit" class="dg-btn-cta border-0 px-5 py-2 fw-semibold text-white">
                     <i class="bi bi-send-check me-1"></i> Post Question
                 </button>
                 <a href="{{ route('questions.index') }}" class="btn btn-outline-secondary rounded-pill px-4 py-2">

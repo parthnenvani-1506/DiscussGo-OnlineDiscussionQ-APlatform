@@ -16,7 +16,7 @@
         </div>
 
         @auth
-            <a href="{{ route('questions.create') }}" class="btn-primary-dg">
+            <a href="{{ route('questions.create') }}" class="dg-btn-cta px-3 py-2 text-white text-decoration-none">
                 <i class="bi bi-plus-circle"></i> Ask in {{ $category->name }}
             </a>
         @endauth
@@ -62,7 +62,7 @@
             <i class="bi bi-folder2-open text-muted display-4"></i>
             <h5 class="mt-3 text-secondary">No discussions in this category yet</h5>
             <p class="small text-muted mb-3">Be the first to post a question under {{ $category->name }}.</p>
-            <a href="{{ route('questions.create') }}" class="btn-primary-dg"><i class="bi bi-plus-circle"></i> Ask Question</a>
+            <a href="{{ route('questions.create') }}" class="dg-btn-cta px-3 py-2 text-white text-decoration-none"><i class="bi bi-plus-circle"></i> Ask Question</a>
         </div>
     @endforelse
 </div>

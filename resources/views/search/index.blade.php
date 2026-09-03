@@ -93,7 +93,7 @@
                     <h5 class="text-secondary fw-bold">No discussions found matching your search</h5>
                     <p class="small text-muted mb-4">Try different search terms or ask a new question about this topic.</p>
                     @auth
-                        <a href="{{ route('questions.create') }}" class="btn btn-primary rounded-pill px-4"><i class="bi bi-plus-circle me-1"></i> Ask this Question</a>
+                        <a href="{{ route('questions.create') }}" class="dg-btn-cta px-4 text-white text-decoration-none"><i class="bi bi-plus-circle me-1"></i> Ask this Question</a>
                     @endauth
                 </div>
             @endforelse
