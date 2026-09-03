@@ -26,52 +26,58 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request): RedirectResponse
     {
-        $credentials = $request->only('email', 'password');
+        $remember = $request->boolean('remember');
 
-        // Check if user exists with password_reset_required or legacy MD5 password
+        // ── Legacy v1 migration path (MD5 passwords or password_reset_required) ──
         $user = User::where('email', $request->email)->first();
         if ($user && $user->password_reset_required) {
-            // Legacy user attempting login with MD5
-            if (md5($request->password) === $user->password || Hash::check($request->password, $user->password)) {
-                // Upgrade password to Bcrypt and clear reset flag
-                $user->password = Hash::make($request->password);
-                $user->password_reset_required = false;
-                $user->save();
+            $passwordValid = md5($request->password) === $user->password
+                || Hash::check($request->password, $user->password);
 
-                Auth::login($user, $request->boolean('remember'));
+            if ($passwordValid) {
+                // Upgrade to bcrypt in-place, clear the reset flag
+                $user->forceFill([
+                    'password'               => Hash::make($request->password),
+                    'password_reset_required' => false,
+                ])->save();
+
+                // Log the user in with remember-me support, then regenerate session
+                Auth::login($user, $remember);
                 $request->session()->regenerate();
 
-                // Redirect moderators to their panel
                 if ($user->role === 'moderator') {
                     return redirect()->route('moderator.dashboard')
                         ->with('success', 'Welcome back! Your account security has been updated.');
                 }
 
-                return redirect()->intended(route('home'))->with('success', 'Welcome back! Your account security has been updated.');
+                return redirect()->intended(route('home'))
+                    ->with('success', 'Welcome back! Your account security has been updated.');
             }
         }
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        // ── Standard credential check ─────────────────────────────────────────
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $remember)) {
             $user = Auth::user();
+
             if ($user->is_suspended) {
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
                 return back()->withErrors([
-                    'email' => 'Your account has been suspended by an administrator. Reason: ' . ($user->suspended_reason ?? 'Violation of community guidelines.'),
+                    'email' => 'Your account has been suspended. Reason: '
+                        . ($user->suspended_reason ?? 'Violation of community guidelines.'),
                 ]);
             }
 
             $request->session()->regenerate();
 
-            // Redirect moderators to their panel
             if ($user->role === 'moderator') {
                 return redirect()->route('moderator.dashboard')
                     ->with('success', 'Welcome back, ' . $user->user_name . '! You are logged in to the Moderator Panel.');
             }
 
             return redirect()->intended(route('home'))
-                ->with('success', 'Logged in successfully! Welcome back, ' . $user->user_name);
+                ->with('success', 'Logged in successfully! Welcome back, ' . $user->user_name . '.');
         }
 
         return back()->withErrors([

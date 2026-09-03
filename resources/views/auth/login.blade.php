@@ -37,7 +37,7 @@
     </div>
 
     <div class="form-check mb-4">
-        <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+        <input class="form-check-input" type="checkbox" name="remember" id="remember" value="1" {{ old('remember') ? 'checked' : '' }}>
         <label class="form-check-label small text-secondary" for="remember">
             Keep me signed in on this device
         </label>
