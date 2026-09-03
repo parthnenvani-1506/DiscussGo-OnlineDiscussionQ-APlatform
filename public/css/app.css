@@ -1770,3 +1770,105 @@ a:hover {
 [data-bs-theme="dark"] .bs-tooltip-auto[data-popper-placement^="bottom"] .tooltip-arrow::before { border-bottom-color: #2d3f5e !important; }
 [data-bs-theme="dark"] .bs-tooltip-auto[data-popper-placement^="left"]   .tooltip-arrow::before { border-left-color:   #2d3f5e !important; }
 [data-bs-theme="dark"] .bs-tooltip-auto[data-popper-placement^="right"]  .tooltip-arrow::before { border-right-color:  #2d3f5e !important; }
+
+/* ==========================================================================
+   Auth — Forgot Password / OTP / Reset Password
+   ========================================================================== */
+
+/* Icon circle at top of each step */
+.auth-otp-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.18);
+}
+
+.auth-otp-icon--amber {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    color: #d97706;
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.2);
+}
+
+.auth-otp-icon--green {
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    color: #16a34a;
+    box-shadow: 0 4px 16px rgba(22, 163, 74, 0.18);
+}
+
+/* Auth divider */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-tertiary, #94a3b8);
+    font-size: 0.8rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    border-top: 1px solid var(--border, #e2e8f0);
+}
+
+/* OTP digit boxes */
+.otp-digit {
+    border-radius: 12px !important;
+    border: 2px solid var(--border, #e2e8f0) !important;
+    font-size: 1.5rem !important;
+    font-weight: 800 !important;
+    color: var(--text-primary, #0f172a) !important;
+    background: var(--bg-card, #ffffff) !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease !important;
+    caret-color: transparent;
+}
+
+.otp-digit:focus {
+    border-color: #f59e0b !important;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18) !important;
+    transform: translateY(-2px) scale(1.04) !important;
+    outline: none !important;
+}
+
+.otp-digit:not(:placeholder-shown) {
+    border-color: #10b981 !important;
+    background: linear-gradient(135deg, rgba(16,185,129,0.05), rgba(16,185,129,0.08)) !important;
+    color: #065f46 !important;
+}
+
+/* Filled OTP digit dark mode */
+[data-bs-theme="dark"] .otp-digit:not(:placeholder-shown) {
+    color: #6ee7b7 !important;
+    background: rgba(16, 185, 129, 0.1) !important;
+}
+
+[data-bs-theme="dark"] .otp-digit {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border) !important;
+}
+
+/* Password strength progress bar track */
+.progress {
+    background-color: var(--bg-secondary, #f1f5f9);
+}
+
+/* Requirement check items */
+.req-item {
+    transition: color 0.2s ease;
+    font-size: 0.78rem;
+    line-height: 1.5;
+}
+
+/* Auth brand logo sizing */
+.auth-brand-logo {
+    height: 38px;
+    max-width: 180px;
+    object-fit: contain;
+}

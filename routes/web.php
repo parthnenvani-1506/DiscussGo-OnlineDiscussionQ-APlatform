@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\Admin\ModeratorController as AdminModeratorController;
 use App\Http\Controllers\Admin\AICenterController as AdminAICenterController;
 use App\Http\Controllers\Admin\AnalyticsController as AdminAnalyticsController;
@@ -50,6 +51,15 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.post')->middleware('throttle:10,1');
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+
+    // ── Password Reset via OTP (3-step) ──────────────────────────────
+    Route::get('/forgot-password',               [PasswordResetController::class, 'showForgotForm'])->name('password.forgot.form');
+    Route::post('/forgot-password',              [PasswordResetController::class, 'sendOtp'])->name('password.forgot.send')->middleware('throttle:5,1');
+    Route::get('/verify-otp',                    [PasswordResetController::class, 'showVerifyOtpForm'])->name('password.verify-otp.form');
+    Route::post('/verify-otp',                   [PasswordResetController::class, 'verifyOtp'])->name('password.verify-otp.submit')->middleware('throttle:10,1');
+    Route::post('/verify-otp/resend',            [PasswordResetController::class, 'resendOtp'])->name('password.verify-otp.resend')->middleware('throttle:3,1');
+    Route::get('/reset-password',                [PasswordResetController::class, 'showResetForm'])->name('password.reset.form');
+    Route::post('/reset-password',               [PasswordResetController::class, 'resetPassword'])->name('password.reset.submit');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');

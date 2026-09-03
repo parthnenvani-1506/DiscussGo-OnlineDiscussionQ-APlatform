@@ -28,24 +28,30 @@ class User extends Authenticatable
         'is_suspended',
         'suspended_reason',
         'password_reset_required',
+        'otp_code',
+        'otp_expires_at',
+        'otp_attempts',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'otp_code',
     ];
 
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'is_suspended' => 'boolean',
+            'otp_expires_at'    => 'datetime',
+            'password'          => 'hashed',
+            'is_suspended'      => 'boolean',
             'password_reset_required' => 'boolean',
-            'reputation' => 'integer',
-            'followers_count' => 'integer',
-            'following_count' => 'integer',
-            'warning_count' => 'integer',
+            'reputation'        => 'integer',
+            'followers_count'   => 'integer',
+            'following_count'   => 'integer',
+            'warning_count'     => 'integer',
+            'otp_attempts'      => 'integer',
         ];
     }
 
