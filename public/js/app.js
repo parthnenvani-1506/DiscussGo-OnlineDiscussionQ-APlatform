@@ -9,6 +9,9 @@ function url(path) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // 0. Dynamic Preloader Management
+    initPreloader();
+
     // 1. Theme Management (Light / Dark mode)
     initTheme();
 
@@ -735,3 +738,112 @@ function selectTagInList(tagId) {
     if (option) option.selected = true;
     showToast('Tag added to selection.', 'success');
 }
+
+/* ==========================================================================
+   DISCUSSHUB DYNAMIC PRELOADER CONTROLLER
+   - Dual Concentric Spinner Rings with Centered Favicon
+   - Non-static event-driven hide (DOMContentLoaded / window load)
+   - Dynamic activation on page navigation & form submissions
+   ========================================================================== */
+window.DiscussHubPreloader = {
+    overlay: null,
+    minTimeMs: 150,
+    startTime: window.__dh_preloader_start_time || Date.now(),
+    maxTimeoutId: null,
+
+    init() {
+        this.overlay = document.getElementById('dh-preloader');
+        if (!this.overlay) return;
+
+        // Safety fallback: Auto-dismiss after 8 seconds max if network or scripts stall
+        if (!this.maxTimeoutId) {
+            this.maxTimeoutId = setTimeout(() => this.hide(), 8000);
+        }
+
+        // Hide preloader as soon as window loads completely
+        if (document.readyState === 'complete') {
+            this.scheduleHide();
+        } else {
+            window.addEventListener('load', () => this.scheduleHide());
+            // Secondary fallback when DOM ready
+            setTimeout(() => this.scheduleHide(), 300);
+        }
+
+        // Bind interactive navigation and form load triggers
+        this.bindNavigationEvents();
+    },
+
+    scheduleHide() {
+        const elapsed = Date.now() - (this.startTime || Date.now());
+        const remaining = Math.max(0, this.minTimeMs - elapsed);
+        setTimeout(() => this.hide(), remaining);
+    },
+
+    show() {
+        if (!this.overlay) this.overlay = document.getElementById('dh-preloader');
+        if (this.overlay) {
+            this.overlay.classList.remove('dh-hidden');
+        }
+    },
+
+    hide() {
+        if (this.maxTimeoutId) {
+            clearTimeout(this.maxTimeoutId);
+            this.maxTimeoutId = null;
+        }
+        if (!this.overlay) this.overlay = document.getElementById('dh-preloader');
+        if (this.overlay) {
+            this.overlay.classList.add('dh-hidden');
+        }
+    },
+
+    async withLoader(asyncFn) {
+        this.show();
+        try {
+            return await asyncFn();
+        } finally {
+            this.hide();
+        }
+    },
+
+    bindNavigationEvents() {
+        // Intercept internal link navigation to show loader
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a');
+            if (!link) return;
+
+            const href = link.getAttribute('href');
+            const target = link.getAttribute('target');
+            const download = link.getAttribute('download');
+
+            if (!href || href.startsWith('#') || href.startsWith('javascript:') || 
+                target === '_blank' || download !== null || link.classList.contains('no-loader') ||
+                link.dataset.bsToggle || link.dataset.bsDismiss) {
+                return;
+            }
+
+            // If navigating within site
+            if (href.startsWith('/') || href.includes(window.location.hostname)) {
+                this.show();
+            }
+        });
+
+        // Intercept form submissions (search, ask question, login, register, etc.)
+        document.addEventListener('submit', (e) => {
+            const form = e.target;
+            if (form && !form.classList.contains('no-loader')) {
+                this.show();
+            }
+        });
+    }
+};
+
+function initPreloader() {
+    window.DiscussHubPreloader.init();
+}
+
+// Immediate execution if window loaded before script execution
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    window.DiscussHubPreloader.init();
+}
+

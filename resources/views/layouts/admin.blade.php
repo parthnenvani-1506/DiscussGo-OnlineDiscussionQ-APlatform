@@ -26,6 +26,8 @@
     @stack('styles')
 </head>
 <body>
+    @include('layouts.partials.preloader')
+
     <!-- Admin Top Navbar -->
     <nav class="dg-navbar navbar navbar-expand-lg py-2">
         <div class="container-fluid px-4">

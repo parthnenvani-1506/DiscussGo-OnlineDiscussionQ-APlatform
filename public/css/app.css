@@ -1872,3 +1872,192 @@ a:hover {
     max-width: 180px;
     object-fit: contain;
 }
+
+/* ==========================================================================
+   DISCUSSHUB DYNAMIC DUAL-RING PRELOADER
+   ========================================================================== */
+.dh-preloader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-bs-theme="dark"] .dh-preloader-overlay,
+[data-theme="dark"] .dh-preloader-overlay {
+    background: rgba(11, 15, 25, 0.94);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+.dh-preloader-overlay.dh-hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+.dh-preloader-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem;
+    border-radius: var(--radius-lg, 16px);
+    user-select: none;
+}
+
+.dh-spinner-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Outer Spinner Ring (Orange Arc Glow) */
+.dh-spinner-outer {
+    position: absolute;
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    border: 4.5px solid transparent;
+    border-top-color: #f97316;
+    border-right-color: #fb923c;
+    border-left-color: rgba(249, 115, 22, 0.12);
+    border-bottom-color: rgba(249, 115, 22, 0.04);
+    box-shadow: 0 0 18px rgba(249, 115, 22, 0.22);
+    animation: dh-spin-cw 1.25s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+}
+
+/* Inner Spinner Ring (Blue Arc Glow) */
+.dh-spinner-inner {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid transparent;
+    border-top-color: var(--brand-primary, #2563eb);
+    border-left-color: #3b82f6;
+    border-right-color: rgba(37, 99, 235, 0.12);
+    border-bottom-color: rgba(37, 99, 235, 0.04);
+    box-shadow: 0 0 15px rgba(37, 99, 235, 0.22);
+    animation: dh-spin-ccw 0.95s linear infinite;
+}
+
+/* Centered Favicon Icon */
+.dh-favicon-wrapper {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    background: var(--bg-card, #ffffff);
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 0 0 2px rgba(37, 99, 235, 0.08);
+    transition: background 0.3s ease;
+}
+
+[data-bs-theme="dark"] .dh-favicon-wrapper,
+[data-theme="dark"] .dh-favicon-wrapper {
+    background: #111827;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.dh-favicon-img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    animation: dh-favicon-pulse 2.4s ease-in-out infinite;
+}
+
+/* Loading Typography & Animated Dots */
+.dh-loading-text {
+    margin-top: 1.75rem;
+    font-family: var(--font-main);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: var(--text-muted, #94a3b8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dh-text-chars {
+    background: linear-gradient(135deg, #475569, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+[data-bs-theme="dark"] .dh-text-chars,
+[data-theme="dark"] .dh-text-chars {
+    background: linear-gradient(135deg, #cbd5e1, #64748b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.dh-dots {
+    display: inline-flex;
+    margin-left: 2px;
+}
+
+.dh-dot {
+    font-size: 1rem;
+    line-height: 1;
+    color: var(--brand-primary, #2563eb);
+    display: inline-block;
+    animation: dh-dot-bounce 1.4s ease-in-out infinite;
+}
+
+.dh-dot:nth-child(1) { animation-delay: 0s; }
+.dh-dot:nth-child(2) { animation-delay: 0.2s; }
+.dh-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* Preloader Keyframe Animations */
+@keyframes dh-spin-cw {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes dh-spin-ccw {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(-360deg); }
+}
+
+@keyframes dh-favicon-pulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 2px 6px rgba(37, 99, 235, 0.15));
+    }
+    50% {
+        transform: scale(1.08);
+        filter: drop-shadow(0 4px 10px rgba(249, 115, 22, 0.3));
+    }
+}
+
+@keyframes dh-dot-bounce {
+    0%, 80%, 100% {
+        opacity: 0.2;
+        transform: translateY(0);
+    }
+    40% {
+        opacity: 1;
+        transform: translateY(-4px);
+    }
+}
+

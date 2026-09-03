@@ -27,6 +27,8 @@
     @stack('styles')
 </head>
 <body>
+    @include('layouts.partials.preloader')
+
     <!-- Top Navigation Bar -->
     <nav class="dg-navbar navbar navbar-expand-lg py-2">
         <div class="container-fluid px-lg-4 px-3" style="max-width: 1440px;">
