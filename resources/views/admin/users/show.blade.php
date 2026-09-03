@@ -28,7 +28,13 @@
             <span class="badge bg-primary mb-3">{{ ucfirst($user->level ?? 'Newcomer') }}</span>
 
             <div class="d-flex justify-content-center gap-2 mb-3">
-                <span class="reputation-badge"><i class="bi bi-stars"></i> {{ $user->reputation }} Rep</span>
+                <span class="reputation-badge rep-badge-fmt"
+                    data-rep="{{ $user->reputation }}"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    title="{{ number_format($user->reputation) }} reputation points">
+                    <i class="bi bi-stars"></i> <span class="rep-value">{{ $user->reputation }}</span> Rep
+                </span>
                 <span class="badge {{ $user->is_suspended ? 'bg-danger' : 'bg-success' }}">
                     {{ $user->is_suspended ? 'Suspended' : 'Active' }}
                 </span>

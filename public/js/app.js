@@ -26,7 +26,84 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 6. Flash Alerts Auto-dismiss
     initFlashAlerts();
+
+    // 7. 3D Navbar Motion & Keyboard Shortcuts
+    initNavbarMotion();
+
+    // 8. Reputation Badge Number Formatting + Tooltips
+    initReputationBadges();
 });
+
+/* ==========================================================================
+   0. 3D Navbar Motion & Micro-Interactions
+   ========================================================================== */
+function initNavbarMotion() {
+    const navbar = document.querySelector('.dg-navbar');
+    const searchInput = document.querySelector('.dg-search-input');
+    const brand = document.querySelector('.dg-brand');
+    const brandLogo = document.querySelector('.dg-brand-logo');
+
+    // 1. Dynamic Scroll Compaction & Elevation
+    if (navbar) {
+        const handleScroll = () => {
+            if (window.scrollY > 15) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll();
+    }
+
+    // 2. Global Keyboard Shortcut for Search (Ctrl+K or /)
+    if (searchInput) {
+        document.addEventListener('keydown', (e) => {
+            // Ignore if active in another input/textarea
+            const tag = document.activeElement?.tagName.toLowerCase();
+            const isEditing = tag === 'input' || tag === 'textarea' || document.activeElement?.isContentEditable;
+
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            } else if (e.key === '/' && !isEditing) {
+                e.preventDefault();
+                searchInput.focus();
+            }
+        });
+    }
+
+    // 3. 3D Perspective Tilt on Brand Logo (Desktop)
+    if (brand && brandLogo && window.matchMedia('(hover: hover)').matches) {
+        brand.addEventListener('mousemove', (e) => {
+            const rect = brand.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            const rotateY = (x / (rect.width / 2)) * 10;
+            const rotateX = -(y / (rect.height / 2)) * 10;
+            brandLogo.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px) scale(1.04)`;
+        });
+
+        brand.addEventListener('mouseleave', () => {
+            brandLogo.style.transform = '';
+        });
+    }
+
+    // 4. Mobile Drawer Auto-Close on Link Click
+    const mobileCollapse = document.getElementById('navbarContent');
+    if (mobileCollapse && window.bootstrap) {
+        const navLinks = mobileCollapse.querySelectorAll('.nav-link, .dg-btn-cta, .dropdown-item');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                const bsCollapse = bootstrap.Collapse.getInstance(mobileCollapse);
+                if (bsCollapse && window.innerWidth < 992) {
+                    bsCollapse.hide();
+                }
+            });
+        });
+    }
+}
 
 /* ==========================================================================
    1. Theme Management
@@ -524,6 +601,61 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+/* ==========================================================================
+   8. Reputation Badge Formatting + Tooltips
+   Converts raw numbers to compact form: 1 000 → 1k, 1 500 000 → 1.5m, etc.
+   Full exact number is always shown in the Bootstrap tooltip on hover.
+   ========================================================================== */
+function formatReputation(n) {
+    n = parseInt(n, 10);
+    if (isNaN(n)) return n;
+
+    if (n >= 1_000_000_000) {
+        const v = n / 1_000_000_000;
+        return (Number.isInteger(v) ? v : v.toFixed(1).replace(/\.0$/, '')) + 'b';
+    }
+    if (n >= 1_000_000) {
+        const v = n / 1_000_000;
+        return (Number.isInteger(v) ? v : v.toFixed(1).replace(/\.0$/, '')) + 'm';
+    }
+    if (n >= 1_000) {
+        const v = n / 1_000;
+        return (Number.isInteger(v) ? v : v.toFixed(1).replace(/\.0$/, '')) + 'k';
+    }
+    return n.toString();
+}
+
+function initReputationBadges() {
+    // Format all reputation display values
+    document.querySelectorAll('.rep-badge-fmt').forEach(badge => {
+        const raw = parseInt(badge.getAttribute('data-rep'), 10);
+        if (isNaN(raw)) return;
+
+        const valueEl = badge.querySelector('.rep-value');
+        if (valueEl) {
+            valueEl.textContent = formatReputation(raw);
+        }
+
+        // Ensure tooltip title uses the full comma-formatted exact number
+        const exact = raw.toLocaleString('en-US');
+        badge.setAttribute('title', exact + ' reputation points');
+
+        // Initialise Bootstrap 5 tooltip — let data-bs-placement drive direction
+        // so each badge appears in the correct position for its context.
+        if (window.bootstrap && window.bootstrap.Tooltip) {
+            // Destroy any existing instance first (safe for re-init)
+            const existing = bootstrap.Tooltip.getInstance(badge);
+            if (existing) existing.dispose();
+
+            new bootstrap.Tooltip(badge, {
+                trigger:   'hover focus',
+                html:      false,
+                animation: true,
+            });
+        }
+    });
+}
 
 /* ==========================================================================
    Tag Deduplication UI (FR-05-AI)

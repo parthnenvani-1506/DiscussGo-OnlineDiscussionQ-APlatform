@@ -15,6 +15,11 @@
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+    <link rel="apple-touch-icon" href="{{ asset('favicon.png') }}">
+
     <!-- Custom Design System -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
@@ -24,26 +29,23 @@
     <!-- Moderator Top Navbar -->
     <nav class="dg-navbar navbar navbar-expand-lg py-2">
         <div class="container-fluid px-4">
-            <a class="dg-brand text-decoration-none" href="{{ route('moderator.dashboard') }}">
-                <div class="d-inline-flex align-items-center justify-content-center bg-warning text-dark rounded p-1" style="width: 32px; height: 32px;">
-                    <i class="bi bi-shield-half fs-5"></i>
-                </div>
-                <span>Discuss<span class="text-primary">Hub</span></span>
-                <span class="badge bg-warning-subtle text-warning border border-warning small ms-1">Moderator Panel</span>
+            <a class="dg-brand text-decoration-none d-inline-flex align-items-center gap-2" href="{{ route('moderator.dashboard') }}">
+                <img src="{{ asset('logo.png') }}" alt="DiscussHub" class="dg-brand-logo">
+                <span class="badge bg-warning-subtle text-warning border border-warning small">Moderator Panel</span>
             </a>
 
-            <div class="ms-auto d-flex align-items-center gap-3">
-                <button class="btn btn-link text-secondary text-decoration-none p-1" id="theme-toggle-btn" title="Toggle Theme">
+            <div class="ms-auto d-flex align-items-center gap-2">
+                <button class="dg-nav-icon-btn" id="theme-toggle-btn" title="Toggle Theme">
                     <i id="theme-toggle-icon" class="bi bi-moon-stars-fill fs-5"></i>
                 </button>
 
-                <a href="{{ route('home') }}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
-                    <i class="bi bi-box-arrow-up-right me-1"></i> Live Site
+                <a href="{{ route('home') }}" target="_blank" class="btn btn-sm btn-outline-secondary rounded-pill px-3 fw-medium d-inline-flex align-items-center gap-1">
+                    <i class="bi bi-box-arrow-up-right"></i> Live Site
                 </a>
 
                 <div class="dropdown">
-                    <button class="btn btn-light rounded-pill border d-flex align-items-center gap-2 py-1 px-3" data-bs-toggle="dropdown">
-                        <i class="bi bi-shield-half text-warning"></i>
+                    <button class="dg-user-pill border-0 btn" data-bs-toggle="dropdown">
+                        <i class="bi bi-shield-half text-warning fs-5"></i>
                         <span class="fw-semibold small">{{ auth()->user()->user_name }}</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm border mt-2">

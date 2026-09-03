@@ -65,8 +65,12 @@
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->city ?? '-' }}</td>
                         <td>
-                            <span class="reputation-badge py-0 px-2">
-                                <i class="bi bi-stars"></i> {{ $user->reputation }}
+                            <span class="reputation-badge py-0 px-2 rep-badge-fmt"
+                                data-rep="{{ $user->reputation }}"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                title="{{ number_format($user->reputation) }} reputation points">
+                                <i class="bi bi-stars"></i> <span class="rep-value">{{ $user->reputation }}</span>
                             </span>
                         </td>
                         <td>{{ $user->questions_count }} Qs / {{ $user->answers_count }} As</td>

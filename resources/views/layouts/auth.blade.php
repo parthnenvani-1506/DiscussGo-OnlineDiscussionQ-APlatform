@@ -12,6 +12,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+    <link rel="apple-touch-icon" href="{{ asset('favicon.png') }}">
+
     <!-- Custom Design System -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
@@ -20,10 +25,8 @@
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6 col-xl-5">
                 <div class="text-center mb-4">
-                    <a href="{{ route('home') }}" class="navbar-brand-logo justify-content-center text-decoration-none">
-                        <i class="bi bi-chat-square-code-fill text-primary fs-3"></i>
-                        <span class="fs-4">Discuss<span class="text-primary">Hub</span></span>
-                        <span class="ai-badge">AI 2.0</span>
+                    <a href="{{ route('home') }}" class="d-inline-flex align-items-center justify-content-center text-decoration-none">
+                        <img src="{{ asset('logo.png') }}" alt="DiscussHub" class="auth-brand-logo">
                     </a>
                 </div>
 

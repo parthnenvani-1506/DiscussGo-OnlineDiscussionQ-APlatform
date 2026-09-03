@@ -324,8 +324,12 @@
                                 </span>
                             </div>
                         </div>
-                        <span class="reputation-badge">
-                            <i class="bi bi-stars"></i> {{ $topUser->reputation }}
+                        <span class="reputation-badge rep-badge-fmt"
+                            data-rep="{{ $topUser->reputation }}"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="{{ number_format($topUser->reputation) }} reputation points">
+                            <i class="bi bi-stars"></i> <span class="rep-value">{{ $topUser->reputation }}</span>
                         </span>
                     </div>
                 @endforeach

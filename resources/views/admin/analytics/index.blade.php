@@ -104,7 +104,13 @@
                                         <span class="badge bg-light text-secondary border">{{ $contributor->level ?? 'Novice' }}</span>
                                     </div>
                                 </td>
-                                <td><span class="reputation-badge"><i class="bi bi-stars"></i> {{ $contributor->reputation }}</span></td>
+                                <td><span class="reputation-badge rep-badge-fmt"
+                                    data-rep="{{ $contributor->reputation }}"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    title="{{ number_format($contributor->reputation) }} reputation points">
+                                    <i class="bi bi-stars"></i> <span class="rep-value">{{ $contributor->reputation }}</span>
+                                </span></td>
                                 <td>{{ $contributor->questions_count }}</td>
                                 <td>{{ $contributor->answers_count }}</td>
                             </tr>

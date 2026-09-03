@@ -44,7 +44,13 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td><span class="reputation-badge py-0 px-2"><i class="bi bi-stars"></i> {{ $mod->reputation }}</span></td>
+                                    <td><span class="reputation-badge py-0 px-2 rep-badge-fmt"
+                                        data-rep="{{ $mod->reputation }}"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        title="{{ number_format($mod->reputation) }} reputation points">
+                                        <i class="bi bi-stars"></i> <span class="rep-value">{{ $mod->reputation }}</span>
+                                    </span></td>
                                     <td>{{ $mod->questions_count }} Q / {{ $mod->answers_count }} A</td>
                                     <td class="text-muted">{{ $mod->created_at->format('M Y') }}</td>
                                     <td class="text-end">

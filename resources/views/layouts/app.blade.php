@@ -16,6 +16,11 @@
     <!-- Highlight.js for Code Highlighting (Optional for technical topics) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
 
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+    <link rel="apple-touch-icon" href="{{ asset('favicon.png') }}">
+
     <!-- Custom Design System -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
@@ -24,64 +29,69 @@
 <body>
     <!-- Top Navigation Bar -->
     <nav class="dg-navbar navbar navbar-expand-lg py-2">
-        <div class="container">
-            <a class="dg-brand text-decoration-none" href="{{ route('home') }}">
-                <div class="d-inline-flex align-items-center justify-content-center bg-primary text-white rounded p-1" style="width: 32px; height: 32px;">
-                    <i class="bi bi-chat-square-quote-fill fs-5"></i>
-                </div>
-                <span>Discuss<span class="text-primary">Hub</span></span>
-                <span class="brand-badge">AI 2.0</span>
+        <div class="container-fluid px-lg-4 px-3" style="max-width: 1440px;">
+            <a class="dg-brand text-decoration-none d-inline-flex align-items-center" href="{{ route('home') }}">
+                <img src="{{ asset('logo.png') }}" alt="DiscussHub" class="dg-brand-logo">
             </a>
 
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <!-- Mobile Quick Actions & Animated Hamburger -->
+            <div class="d-flex align-items-center gap-2 d-lg-none">
+                <button class="dg-nav-icon-btn p-0" id="theme-toggle-btn-mobile" title="Toggle Light/Dark Theme" onclick="document.getElementById('theme-toggle-btn')?.click()">
+                    <i class="bi bi-moon-stars-fill fs-5"></i>
+                </button>
+                <button class="dg-hamburger-btn collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="dg-hamburger-line"></span>
+                    <span class="dg-hamburger-line"></span>
+                    <span class="dg-hamburger-line"></span>
+                </button>
+            </div>
 
             <div class="collapse navbar-collapse" id="navbarContent">
-                <!-- Search bar -->
-                <form action="{{ route('search') }}" method="GET" class="dg-search-box mx-lg-4 my-2 my-lg-0">
+                <!-- Search bar with Keyboard Shortcut -->
+                <form action="{{ route('search') }}" method="GET" class="dg-search-box mx-lg-2 mx-xl-3 my-2 my-lg-0">
                     <i class="bi bi-search dg-search-icon"></i>
                     <input type="text" name="q" class="dg-search-input" placeholder="Search questions, topics, answers, tags..." value="{{ request('q') }}">
+                    <kbd class="dg-search-kbd d-none d-md-inline-block">Ctrl K</kbd>
                 </form>
 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
                     <li class="nav-item">
-                        <a class="nav-link px-3 {{ request()->routeIs('home') ? 'active fw-semibold text-primary' : 'text-secondary' }}" href="{{ route('home') }}">
-                            <i class="bi bi-house me-1"></i> Home
+                        <a class="nav-link {{ request()->routeIs('home') ? 'active' : 'text-secondary' }}" href="{{ route('home') }}">
+                            Home
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 {{ request()->routeIs('questions.*') ? 'active fw-semibold text-primary' : 'text-secondary' }}" href="{{ route('questions.index') }}">
-                            <i class="bi bi-chat-left-text me-1"></i> Discussions
+                        <a class="nav-link {{ request()->routeIs('questions.*') ? 'active' : 'text-secondary' }}" href="{{ route('questions.index') }}">
+                            Discussions
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 {{ request()->routeIs('categories.*') ? 'active fw-semibold text-primary' : 'text-secondary' }}" href="{{ route('categories.index') }}">
-                            <i class="bi bi-grid me-1"></i> Topics
+                        <a class="nav-link {{ request()->routeIs('categories.*') ? 'active' : 'text-secondary' }}" href="{{ route('categories.index') }}">
+                            Topics
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 {{ request()->routeIs('tags.*') ? 'active fw-semibold text-primary' : 'text-secondary' }}" href="{{ route('tags.index') }}">
-                            <i class="bi bi-tags me-1"></i> Tags
+                        <a class="nav-link {{ request()->routeIs('tags.*') ? 'active' : 'text-secondary' }}" href="{{ route('tags.index') }}">
+                            Tags
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 {{ request()->routeIs('contact.*') ? 'active fw-semibold text-primary' : 'text-secondary' }}" href="{{ route('contact.show') }}">
-                            <i class="bi bi-envelope me-1"></i> Contact Us
+                        <a class="nav-link {{ request()->routeIs('contact.*') ? 'active' : 'text-secondary' }}" href="{{ route('contact.show') }}">
+                            Contact Us
                         </a>
                     </li>
                 </ul>
 
                 <!-- Right Action Items -->
-                <div class="d-flex align-items-center gap-3">
-                    <!-- Theme Toggle Button -->
-                    <button class="btn btn-link text-secondary text-decoration-none p-1" id="theme-toggle-btn" title="Toggle Light/Dark Theme">
+                <div class="dg-nav-right-actions d-flex align-items-center gap-2">
+                    <!-- Desktop Theme Toggle Button -->
+                    <button class="dg-nav-icon-btn d-none d-lg-inline-flex" id="theme-toggle-btn" title="Toggle Light/Dark Theme">
                         <i id="theme-toggle-icon" class="bi bi-moon-stars-fill fs-5"></i>
                     </button>
 
                     @auth
                         <!-- Bookmarks -->
-                        <a href="{{ route('bookmarks.index') }}" class="btn btn-link text-secondary text-decoration-none p-1 position-relative" title="Saved Discussions">
+                        <a href="{{ route('bookmarks.index') }}" class="dg-nav-icon-btn" title="Saved Discussions">
                             <i class="bi bi-bookmark fs-5"></i>
                         </a>
 
@@ -89,10 +99,10 @@
                         @php
                             $unreadNotificationsCount = auth()->user()->unreadNotificationsCount();
                         @endphp
-                        <a href="{{ route('notifications.index') }}" class="btn btn-link text-secondary text-decoration-none p-1 position-relative" title="Notifications">
+                        <a href="{{ route('notifications.index') }}" class="dg-nav-icon-btn position-relative" title="Notifications">
                             <i class="bi bi-bell fs-5"></i>
                             @if($unreadNotificationsCount > 0)
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+                                <span class="dg-badge-radar badge rounded-pill">
                                     {{ $unreadNotificationsCount }}
                                 </span>
                             @endif
@@ -100,17 +110,21 @@
 
                         <!-- User Profile Dropdown -->
                         <div class="dropdown">
-                            <button class="btn btn-light rounded-pill d-flex align-items-center gap-2 py-1 px-3 border" type="button" data-bs-toggle="dropdown">
+                            <button class="dg-user-pill border-0 btn" type="button" data-bs-toggle="dropdown">
                                 @if(auth()->user()->profile_image && auth()->user()->profile_image !== 'default_profile.png')
-                                    <img src="{{ asset('profiles/' . auth()->user()->profile_image) }}" class="rounded-circle object-fit-cover" width="26" height="26" alt="avatar">
+                                    <img src="{{ asset('profiles/' . auth()->user()->profile_image) }}" class="rounded-circle object-fit-cover" width="28" height="28" alt="avatar">
                                 @else
-                                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 26px; height: 26px; font-size: 0.75rem;">
+                                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 28px; height: 28px; font-size: 0.75rem;">
                                         {{ strtoupper(substr(auth()->user()->user_name, 0, 1)) }}
                                     </div>
                                 @endif
                                 <span class="fw-semibold small d-none d-md-inline">{{ auth()->user()->user_name }}</span>
-                                <span class="reputation-badge py-0 px-2" title="Reputation">
-                                    <i class="bi bi-stars"></i> {{ auth()->user()->reputation }}
+                                <span class="reputation-badge py-0 px-2 rep-badge-fmt"
+                                    data-rep="{{ auth()->user()->reputation }}"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="bottom"
+                                    title="{{ number_format(auth()->user()->reputation) }} reputation points">
+                                    <i class="bi bi-stars"></i> <span class="rep-value">{{ auth()->user()->reputation }}</span>
                                 </span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border mt-2">
@@ -129,7 +143,7 @@
                         </div>
 
                         <!-- Ask Question CTA -->
-                        <a href="{{ route('questions.create') }}" class="btn btn-primary btn-sm rounded-pill px-3 fw-semibold d-inline-flex align-items-center gap-1">
+                        <a href="{{ route('questions.create') }}" class="dg-btn-cta">
                             <i class="bi bi-plus-lg"></i> Ask Question
                         </a>
 
@@ -140,7 +154,7 @@
                         @endif
                     @else
                         <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm fw-medium px-3 rounded-pill">Sign In</a>
-                        <a href="{{ route('register') }}" class="btn btn-primary btn-sm fw-semibold px-3 rounded-pill">Join Community</a>
+                        <a href="{{ route('register') }}" class="dg-btn-cta">Join Community</a>
                     @endauth
                 </div>
             </div>
@@ -184,9 +198,9 @@
         <div class="container">
             <div class="row g-4 mb-4">
                 <div class="col-lg-4">
-                    <div class="d-flex align-items-center gap-2 fw-bold fs-5 text-primary mb-2">
-                        <i class="bi bi-chat-square-quote-fill"></i> DiscussHub
-                    </div>
+                    <a href="{{ route('home') }}" class="text-decoration-none d-inline-block mb-3">
+                        <img src="{{ asset('logo.png') }}" alt="DiscussHub" class="dg-footer-logo">
+                    </a>
                     <p class="small text-secondary mb-3">
                         Open knowledge sharing and Q&amp;A platform empowering curious minds to ask questions, share perspectives, and discover verified answers.
                     </p>

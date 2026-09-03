@@ -148,8 +148,12 @@
                                 <a href="{{ route('users.show', $question->user->id) }}" class="fw-semibold text-dark text-decoration-none small d-block">
                                     {{ $question->user->user_name }}
                                 </a>
-                                <span class="reputation-badge py-0 px-2" style="font-size: 0.65rem;">
-                                    <i class="bi bi-stars"></i> {{ $question->user->reputation }} · {{ ucfirst($question->user->level ?? 'newcomer') }}
+                                <span class="reputation-badge py-0 px-2 rep-badge-fmt"
+                                    data-rep="{{ $question->user->reputation }}"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    title="{{ number_format($question->user->reputation) }} reputation points">
+                                    <i class="bi bi-stars"></i> <span class="rep-value">{{ $question->user->reputation }}</span> · {{ ucfirst($question->user->level ?? 'newcomer') }}
                                 </span>
                             </div>
                         </div>

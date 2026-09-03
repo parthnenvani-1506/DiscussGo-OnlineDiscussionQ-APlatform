@@ -27,7 +27,13 @@
                                 <span><i class="bi bi-geo-alt me-1"></i> {{ $user->city }}</span>
                             @endif
                             <span><i class="bi bi-calendar3 me-1"></i> Joined {{ $user->created_at->format('M Y') }}</span>
-                            <span class="reputation-badge"><i class="bi bi-stars"></i> {{ $user->reputation }} Reputation</span>
+                            <span class="reputation-badge rep-badge-fmt"
+                                data-rep="{{ $user->reputation }}"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="bottom"
+                                title="{{ number_format($user->reputation) }} reputation points">
+                                <i class="bi bi-stars"></i> <span class="rep-value">{{ $user->reputation }}</span> Reputation
+                            </span>
                         </div>
                         @if($user->bio)
                             <p class="text-secondary small mb-0" style="max-width: 600px;">{{ $user->bio }}</p>

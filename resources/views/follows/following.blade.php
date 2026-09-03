@@ -31,7 +31,13 @@
                             </a>
                             <div class="small text-muted d-flex align-items-center gap-2">
                                 <span class="badge bg-light text-secondary border">{{ ucfirst($followed->level ?? 'newcomer') }}</span>
-                                <span class="reputation-badge py-0 px-2"><i class="bi bi-stars"></i> {{ $followed->reputation }}</span>
+                                <span class="reputation-badge py-0 px-2 rep-badge-fmt"
+                                    data-rep="{{ $followed->reputation }}"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    title="{{ number_format($followed->reputation) }} reputation points">
+                                    <i class="bi bi-stars"></i> <span class="rep-value">{{ $followed->reputation }}</span>
+                                </span>
                                 @if($followed->city) <span><i class="bi bi-geo-alt me-1"></i>{{ $followed->city }}</span> @endif
                             </div>
                         </div>
