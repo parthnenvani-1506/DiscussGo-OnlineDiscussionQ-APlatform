@@ -33,7 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 7. 3D Navbar Motion & Keyboard Shortcuts
     initNavbarMotion();
 
-    // 8. Reputation Badge Number Formatting + Tooltips
+    // 8. Runtime Navbar Live Search (Multi-Category Autocomplete)
+    initNavbarLiveSearch();
+
+    // 9. Reputation Badge Number Formatting + Tooltips
     initReputationBadges();
 });
 
@@ -106,6 +109,373 @@ function initNavbarMotion() {
             });
         });
     }
+}
+
+/* ==========================================================================
+   0.1 Runtime Navbar Live Search (Categories, Questions, Answers, Tags, Users)
+   ========================================================================== */
+function initNavbarLiveSearch() {
+    const searchWrapper = document.querySelector('.dg-search-wrapper');
+    const searchInput = document.getElementById('dg-search-input');
+    const dropdown = document.getElementById('dg-search-dropdown');
+    const resultsContent = document.getElementById('dg-search-results-content');
+    const spinner = document.getElementById('dg-search-spinner');
+    const clearBtn = document.getElementById('dg-search-clear-btn');
+    const kbd = searchWrapper ? searchWrapper.querySelector('.dg-search-kbd') : null;
+
+    if (!searchInput || !dropdown || !resultsContent) return;
+
+    let abortController = null;
+    let debounceTimer = null;
+    let selectedIndex = -1;
+
+    // Safe HTML Escaper
+    function escapeHtml(text) {
+        if (!text) return '';
+        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+        return String(text).replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // Match Highlighter
+    function highlightMatch(text, query) {
+        if (!text) return '';
+        if (!query) return escapeHtml(text);
+        const cleanQuery = query.replace(/[#@]/g, '').trim();
+        if (!cleanQuery) return escapeHtml(text);
+
+        const escapedText = escapeHtml(text);
+        const regex = new RegExp(`(${cleanQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+        return escapedText.replace(regex, '<span class="dg-search-highlight">$1</span>');
+    }
+
+    function showDropdown() {
+        dropdown.classList.remove('d-none');
+        searchInput.setAttribute('aria-expanded', 'true');
+    }
+
+    function hideDropdown() {
+        dropdown.classList.add('d-none');
+        searchInput.setAttribute('aria-expanded', 'false');
+        selectedIndex = -1;
+    }
+
+    function getSelectableItems() {
+        return dropdown.querySelectorAll('.dg-search-item, .dg-search-footer');
+    }
+
+    function updateSelection() {
+        const items = getSelectableItems();
+        items.forEach((item, idx) => {
+            if (idx === selectedIndex) {
+                item.classList.add('is-selected');
+                item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            } else {
+                item.classList.remove('is-selected');
+            }
+        });
+    }
+
+    function updateClearButtonState() {
+        if (clearBtn) {
+            if (searchInput.value.trim().length > 0) {
+                clearBtn.classList.remove('d-none');
+                if (kbd) kbd.classList.add('d-none');
+            } else {
+                clearBtn.classList.add('d-none');
+                if (kbd) kbd.classList.remove('d-none');
+            }
+        }
+    }
+
+    // Execute Live Search Request
+    async function performSearch(query) {
+        const trimmed = query.trim();
+        if (trimmed.length === 0) {
+            hideDropdown();
+            if (spinner) spinner.classList.add('d-none');
+            return;
+        }
+
+        if (abortController) {
+            abortController.abort();
+        }
+        abortController = new AbortController();
+
+        if (spinner) spinner.classList.remove('d-none');
+
+        try {
+            const liveSearchEndpoint = url('search/live') + '?q=' + encodeURIComponent(trimmed);
+            const res = await fetch(liveSearchEndpoint, {
+                signal: abortController.signal,
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+            const data = await res.json();
+            renderResults(data);
+        } catch (err) {
+            if (err.name !== 'AbortError') {
+                console.warn('[DiscussHub Search] Live search failed:', err);
+            }
+        } finally {
+            if (spinner) spinner.classList.add('d-none');
+        }
+    }
+
+    // Render grouped categories, questions, answers, tags, and users
+    function renderResults(data) {
+        selectedIndex = -1;
+        const q = data.query || '';
+
+        if (data.total_count === 0) {
+            resultsContent.innerHTML = `
+                <div class="dg-search-empty">
+                    <i class="bi bi-search dg-search-empty-icon"></i>
+                    <div class="dg-search-empty-text">No matches found for "<strong>${escapeHtml(q)}</strong>"</div>
+                    <div class="dg-search-empty-sub">Press <kbd>Enter ↵</kbd> to perform a full discussion search</div>
+                </div>
+                <a href="${data.full_search_url}" class="dg-search-footer">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-arrow-right-circle"></i>
+                        <span>Search everything for "<strong>${escapeHtml(q)}</strong>"</span>
+                    </div>
+                    <kbd>Enter ↵</kbd>
+                </a>
+            `;
+            showDropdown();
+            return;
+        }
+
+        let html = '';
+
+        // 1. Categories
+        if (data.categories && data.categories.length > 0) {
+            html += `
+                <div class="dg-search-section">
+                    <div class="dg-search-header dg-header-cat">
+                        <span class="dg-search-header-icon"><i class="bi bi-grid-fill"></i></span>
+                        <span>Categories</span>
+                    </div>
+            `;
+            data.categories.forEach(cat => {
+                html += `
+                    <a href="${cat.url}" class="dg-search-item" data-type="category" role="option">
+                        <span class="dg-search-item-icon"><i class="bi bi-folder2-open"></i></span>
+                        <div class="dg-search-item-info">
+                            <div class="dg-search-item-title">${highlightMatch(cat.name, q)}</div>
+                            <div class="dg-search-item-sub">${escapeHtml(cat.description || 'Topic Category')}</div>
+                        </div>
+                        <span class="dg-search-item-badge badge-primary">${cat.questions_count} Qs</span>
+                    </a>
+                `;
+            });
+            html += `</div>`;
+        }
+
+        // 2. Questions
+        if (data.questions && data.questions.length > 0) {
+            html += `
+                <div class="dg-search-section">
+                    <div class="dg-search-header dg-header-question">
+                        <span class="dg-search-header-icon"><i class="bi bi-patch-question-fill"></i></span>
+                        <span>Questions</span>
+                    </div>
+            `;
+            data.questions.forEach(question => {
+                const statusBadge = question.is_answered
+                    ? `<span class="dg-search-item-badge badge-success"><i class="bi bi-check-circle-fill"></i> Solved</span>`
+                    : `<span class="dg-search-item-badge badge-warning">${question.answer_count} answers</span>`;
+
+                html += `
+                    <a href="${question.url}" class="dg-search-item" data-type="question" role="option">
+                        <span class="dg-search-item-icon"><i class="bi bi-chat-square-text"></i></span>
+                        <div class="dg-search-item-info">
+                            <div class="dg-search-item-title">${highlightMatch(question.title, q)}</div>
+                            <div class="dg-search-item-sub">${question.category ? escapeHtml(question.category) + ' • ' : ''}by ${escapeHtml(question.user_name)}</div>
+                        </div>
+                        ${statusBadge}
+                    </a>
+                `;
+            });
+            html += `</div>`;
+        }
+
+        // 3. Answers
+        if (data.answers && data.answers.length > 0) {
+            html += `
+                <div class="dg-search-section">
+                    <div class="dg-search-header dg-header-answer">
+                        <span class="dg-search-header-icon"><i class="bi bi-chat-left-quote-fill"></i></span>
+                        <span>Answers</span>
+                    </div>
+            `;
+            data.answers.forEach(ans => {
+                const badge = ans.is_accepted 
+                    ? `<span class="dg-search-item-badge badge-success"><i class="bi bi-check2-all"></i> Accepted</span>`
+                    : `<span class="dg-search-item-badge">${ans.vote_score} votes</span>`;
+
+                html += `
+                    <a href="${ans.url}" class="dg-search-item" data-type="answer" role="option">
+                        <span class="dg-search-item-icon"><i class="bi bi-quote"></i></span>
+                        <div class="dg-search-item-info">
+                            <div class="dg-search-item-title">${highlightMatch(ans.snippet, q)}</div>
+                            <div class="dg-search-item-sub">In: ${escapeHtml(ans.question_title)} • by ${escapeHtml(ans.user_name)}</div>
+                        </div>
+                        ${badge}
+                    </a>
+                `;
+            });
+            html += `</div>`;
+        }
+
+        // 4. Hashtags / Tags
+        if (data.hashtags && data.hashtags.length > 0) {
+            html += `
+                <div class="dg-search-section">
+                    <div class="dg-search-header dg-header-tag">
+                        <span class="dg-search-header-icon"><i class="bi bi-hash"></i></span>
+                        <span>Hashtags & Tags</span>
+                    </div>
+            `;
+            data.hashtags.forEach(tag => {
+                html += `
+                    <a href="${tag.url}" class="dg-search-item" data-type="tag" role="option">
+                        <span class="dg-search-item-icon"><i class="bi bi-tag-fill"></i></span>
+                        <div class="dg-search-item-info">
+                            <div class="dg-search-item-title">#${highlightMatch(tag.name, q)}</div>
+                            <div class="dg-search-item-sub">${escapeHtml(tag.slug)}</div>
+                        </div>
+                        <span class="dg-search-item-badge badge-primary">${tag.usage_count} questions</span>
+                    </a>
+                `;
+            });
+            html += `</div>`;
+        }
+
+        // 5. Users
+        if (data.users && data.users.length > 0) {
+            html += `
+                <div class="dg-search-section">
+                    <div class="dg-search-header dg-header-user">
+                        <span class="dg-search-header-icon"><i class="bi bi-people-fill"></i></span>
+                        <span>Users</span>
+                    </div>
+            `;
+            data.users.forEach(u => {
+                const avatarMarkup = u.avatar_url 
+                    ? `<img src="${u.avatar_url}" class="dg-search-item-avatar" alt="${escapeHtml(u.user_name)}">`
+                    : `<span class="dg-search-item-initial">${escapeHtml(u.initial)}</span>`;
+
+                html += `
+                    <a href="${u.url}" class="dg-search-item" data-type="user" role="option">
+                        ${avatarMarkup}
+                        <div class="dg-search-item-info">
+                            <div class="dg-search-item-title">@${highlightMatch(u.user_name, q)}</div>
+                            <div class="dg-search-item-sub">${escapeHtml(u.level)} • ${escapeHtml(u.role)}</div>
+                        </div>
+                        <span class="dg-search-item-badge"><i class="bi bi-stars text-warning"></i> ${u.reputation} rep</span>
+                    </a>
+                `;
+            });
+            html += `</div>`;
+        }
+
+        // Full Search Footer
+        html += `
+            <a href="${data.full_search_url}" class="dg-search-footer">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-arrow-right-circle"></i>
+                    <span>See all results for "<strong>${escapeHtml(q)}</strong>"</span>
+                </div>
+                <kbd>Enter ↵</kbd>
+            </a>
+        `;
+
+        resultsContent.innerHTML = html;
+        showDropdown();
+    }
+
+    // Input Typing Handler with Debounce
+    searchInput.addEventListener('input', (e) => {
+        const val = e.target.value;
+        updateClearButtonState();
+
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            performSearch(val);
+        }, 220);
+    });
+
+    // Input Focus Handler (Reopen if query exists)
+    searchInput.addEventListener('focus', () => {
+        updateClearButtonState();
+        if (searchInput.value.trim().length > 0 && resultsContent.children.length > 0) {
+            showDropdown();
+        }
+    });
+
+    // Clear Button Click
+    if (clearBtn) {
+        clearBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            searchInput.value = '';
+            updateClearButtonState();
+            hideDropdown();
+            searchInput.focus();
+        });
+    }
+
+    // Keyboard Navigation (Arrow Keys, Enter, Esc)
+    searchInput.addEventListener('keydown', (e) => {
+        const isVisible = !dropdown.classList.contains('d-none');
+
+        if (e.key === 'ArrowDown') {
+            if (!isVisible) {
+                if (searchInput.value.trim().length > 0) performSearch(searchInput.value);
+                return;
+            }
+            e.preventDefault();
+            const items = getSelectableItems();
+            if (items.length === 0) return;
+
+            selectedIndex++;
+            if (selectedIndex >= items.length) selectedIndex = 0;
+            updateSelection();
+        } else if (e.key === 'ArrowUp') {
+            if (!isVisible) return;
+            e.preventDefault();
+            const items = getSelectableItems();
+            if (items.length === 0) return;
+
+            selectedIndex--;
+            if (selectedIndex < 0) selectedIndex = items.length - 1;
+            updateSelection();
+        } else if (e.key === 'Enter') {
+            if (isVisible && selectedIndex >= 0) {
+                const items = getSelectableItems();
+                if (items[selectedIndex]) {
+                    e.preventDefault();
+                    items[selectedIndex].click();
+                }
+            }
+        } else if (e.key === 'Escape') {
+            if (isVisible) {
+                e.preventDefault();
+                hideDropdown();
+            }
+        }
+    });
+
+    // Dismiss Dropdown on Click Outside
+    document.addEventListener('click', (e) => {
+        if (!searchWrapper.contains(e.target)) {
+            hideDropdown();
+        }
+    });
 }
 
 /* ==========================================================================

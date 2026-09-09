@@ -25,6 +25,7 @@ Route::post('/ai/generate-answer/{id}', [AIController::class, 'generateAnswer'])
 // Related & Taxonomy
 Route::get('/questions/related/{id}', [QuestionController::class, 'related'])->name('api.questions.related');
 Route::get('/tags/search', [TagController::class, 'search'])->name('api.tags.search');
+Route::get('/search/live', [\App\Http\Controllers\SearchController::class, 'liveSearch'])->name('api.search.live');
 
 // Tag & Category Deduplication (public — no auth required)
 Route::post('/tags/check-duplicate', [TagMergeController::class, 'checkTag'])->name('api.tags.check-duplicate');

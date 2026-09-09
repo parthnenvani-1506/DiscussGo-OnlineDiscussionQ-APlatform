@@ -49,12 +49,38 @@
             </div>
 
             <div class="collapse navbar-collapse" id="navbarContent">
-                <!-- Search bar with Keyboard Shortcut -->
-                <form action="{{ route('search') }}" method="GET" class="dg-search-box ms-lg-2 me-lg-3 my-2 my-lg-0">
-                    <i class="bi bi-search dg-search-icon"></i>
-                    <input type="text" name="q" class="dg-search-input" placeholder="Search discussions..." value="{{ request('q') }}">
-                    <kbd class="dg-search-kbd d-none d-xl-inline-block">Ctrl K</kbd>
-                </form>
+                <!-- Search bar with Keyboard Shortcut & Runtime Multi-Category Autocomplete -->
+                <div class="dg-search-wrapper position-relative ms-lg-2 me-lg-3 my-2 my-lg-0">
+                    <form action="{{ route('search') }}" method="GET" class="dg-search-box" id="dg-navbar-search-form" autocomplete="off">
+                        <i class="bi bi-search dg-search-icon"></i>
+                        <input type="text" 
+                               name="q" 
+                               id="dg-search-input"
+                               class="dg-search-input" 
+                               placeholder="Search questions, topics, users..." 
+                               value="{{ request('q') }}"
+                               autocomplete="off"
+                               role="combobox"
+                               aria-autocomplete="list"
+                               aria-expanded="false"
+                               aria-controls="dg-search-dropdown"
+                               aria-haspopup="listbox">
+                        <div class="dg-search-actions d-flex align-items-center">
+                            <span class="dg-search-spinner spinner-border spinner-border-sm d-none" id="dg-search-spinner" role="status" aria-hidden="true"></span>
+                            <button type="button" class="dg-search-clear-btn d-none" id="dg-search-clear-btn" aria-label="Clear search">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                            <kbd class="dg-search-kbd d-none d-xl-inline-block">Ctrl K</kbd>
+                        </div>
+                    </form>
+
+                    <!-- Runtime Live Search Floating Dropdown -->
+                    <div class="dg-search-dropdown shadow-lg d-none" id="dg-search-dropdown" role="listbox">
+                        <div class="dg-search-results-content" id="dg-search-results-content">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
                     <li class="nav-item">

@@ -114,6 +114,7 @@ Route::get('/categories', [CategoryController::class, 'index'])->name('categorie
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('categories.show');
 Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
 Route::get('/tags/{slug}', [TagController::class, 'show'])->name('tags.show');
+Route::get('/search/live', [SearchController::class, 'liveSearch'])->name('search.live');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/users/{id}', [ProfileController::class, 'showPublic'])->name('users.show');
 Route::get('/contact', [ContactController::class, 'show'])->name('contact.show');
