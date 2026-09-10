@@ -10,44 +10,47 @@
     </div>
 
     <!-- Search Tag Input -->
-    <form action="{{ route('tags.index') }}" method="GET" style="max-width: 320px;" class="w-100">
+    <form action="{{ route('tags.index') }}" method="GET" style="max-width: 340px;" class="w-100 dg-realtime-search-form">
         <div class="input-group">
-            <input type="text" name="q" class="form-control form-control-dg" placeholder="Filter by tag name..." value="{{ $search }}">
-            <button type="submit" class="btn btn-outline-primary"><i class="bi bi-search"></i></button>
+            <span class="input-group-text bg-transparent border-end-0 text-muted"><i class="bi bi-search"></i></span>
+            <input type="text" name="q" class="form-control form-control-dg border-start-0 ps-0 dg-realtime-input" placeholder="Filter by tag name..." value="{{ $search }}" autocomplete="off">
         </div>
     </form>
 </div>
 
-<div class="row g-3">
-    @forelse($tags as $tag)
-        <div class="col-md-4 col-sm-6">
-            <div class="dg-card p-3 h-100 d-flex flex-column justify-content-between interactive">
-                <div>
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <a href="{{ route('tags.show', $tag->slug) }}" class="tag-badge text-decoration-none fw-bold">
-                            #{{ $tag->name }}
-                        </a>
-                        <span class="badge bg-light text-secondary border small">{{ $tag->usage_count }} questions</span>
+<!-- Realtime Tags Results Container -->
+<div id="dg-realtime-results-container" class="dg-realtime-results-wrapper">
+    <div class="row g-3">
+        @forelse($tags as $tag)
+            <div class="col-md-4 col-sm-6">
+                <div class="dg-card p-3 h-100 d-flex flex-column justify-content-between interactive">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <a href="{{ route('tags.show', $tag->slug) }}" class="tag-badge text-decoration-none fw-bold">
+                                #{{ $tag->name }}
+                            </a>
+                            <span class="badge bg-light text-secondary border small">{{ $tag->usage_count }} questions</span>
+                        </div>
+                        <p class="text-secondary small mb-0">{{ $tag->description ?? 'All discussions and solutions tagged with ' . $tag->name }}</p>
                     </div>
-                    <p class="text-secondary small mb-0">{{ $tag->description ?? 'All discussions and solutions tagged with ' . $tag->name }}</p>
-                </div>
 
-                <div class="mt-3 pt-2 border-top">
-                    <a href="{{ route('tags.show', $tag->slug) }}" class="small text-primary text-decoration-none fw-semibold">
-                        View Questions <i class="bi bi-arrow-right"></i>
-                    </a>
+                    <div class="mt-3 pt-2 border-top">
+                        <a href="{{ route('tags.show', $tag->slug) }}" class="small text-primary text-decoration-none fw-semibold">
+                            View Questions <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-    @empty
-        <div class="col-12 text-center py-5">
-            <i class="bi bi-tags text-muted display-4"></i>
-            <h5 class="mt-3 text-secondary">No tags found matching "{{ $search }}"</h5>
-        </div>
-    @endforelse
-</div>
+        @empty
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-tags text-muted display-4"></i>
+                <h5 class="mt-3 text-secondary">No tags found matching "{{ $search }}"</h5>
+            </div>
+        @endforelse
+    </div>
 
-<div class="mt-4 d-flex justify-content-center">
-    {{ $tags->links() }}
+    <div class="mt-4 d-flex justify-content-center">
+        {{ $tags->links() }}
+    </div>
 </div>
 @endsection

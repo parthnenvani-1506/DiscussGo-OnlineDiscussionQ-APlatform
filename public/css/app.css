@@ -678,6 +678,21 @@ a:hover {
     border-color: transparent;
 }
 
+/* Realtime In-Page Search Loading & Transitions */
+.dg-realtime-results-wrapper {
+    transition: opacity 0.2s ease, filter 0.2s ease, transform 0.2s ease;
+}
+
+.dg-realtime-loading {
+    opacity: 0.55 !important;
+    pointer-events: none;
+    filter: blur(0.5px);
+}
+
+.dg-realtime-input:focus {
+    box-shadow: 0 0 0 3px var(--primary-light), 0 4px 12px rgba(37, 99, 235, 0.1);
+}
+
 /* Empty State */
 .dg-search-empty {
     padding: 1.5rem 1rem;

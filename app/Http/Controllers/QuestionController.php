@@ -34,6 +34,15 @@ class QuestionController extends Controller
     {
         $query = Question::with(['user', 'category', 'tags', 'acceptedAnswer']);
 
+        // Filter by keyword search
+        if ($request->filled('q')) {
+            $keyword = trim((string) $request->query('q'));
+            $query->where(function ($q) use ($keyword) {
+                $q->where('title', 'LIKE', "%{$keyword}%")
+                  ->orWhere('description', 'LIKE', "%{$keyword}%");
+            });
+        }
+
         // Filter by category
         if ($request->filled('category')) {
             $query->whereHas('category', function ($q) use ($request) {

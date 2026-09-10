@@ -12,15 +12,15 @@
 
 <!-- Filters Bar -->
 <div class="dg-card p-3 mb-4">
-    <form action="{{ route('admin.users.index') }}" method="GET" class="row g-2 align-items-center">
+    <form action="{{ route('admin.users.index') }}" method="GET" class="row g-2 align-items-center dg-realtime-search-form">
         <div class="col-md-8">
             <div class="input-group">
-                <span class="input-group-text bg-transparent"><i class="bi bi-search"></i></span>
-                <input type="text" name="q" class="form-control form-control-dg" placeholder="Search by username, email, city..." value="{{ $search }}">
+                <span class="input-group-text bg-transparent border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                <input type="text" name="q" class="form-control form-control-dg border-start-0 ps-0 dg-realtime-input" placeholder="Search by username, email, city..." value="{{ $search }}" autocomplete="off">
             </div>
         </div>
         <div class="col-md-4">
-            <select name="status" class="form-select form-control-dg" onchange="this.form.submit()">
+            <select name="status" class="form-select form-control-dg">
                 <option value="">All Statuses</option>
                 <option value="active" {{ $status === 'active' ? 'selected' : '' }}>Active Only</option>
                 <option value="suspended" {{ $status === 'suspended' ? 'selected' : '' }}>Suspended Only</option>
@@ -29,9 +29,10 @@
     </form>
 </div>
 
-<!-- Users Table -->
-<div class="dg-card overflow-hidden">
-    <div class="table-responsive">
+<!-- Realtime Users Results -->
+<div id="dg-realtime-results-container" class="dg-realtime-results-wrapper">
+    <div class="dg-card overflow-hidden">
+        <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light small">
                 <tr>
@@ -131,9 +132,8 @@
             </tbody>
         </table>
     </div>
-</div>
-
-<div class="mt-4 d-flex justify-content-center">
-    {{ $users->links() }}
+    <div class="mt-4 d-flex justify-content-center">
+        {{ $users->links() }}
+    </div>
 </div>
 @endsection

@@ -10,19 +10,28 @@ use Illuminate\View\View;
 class CategoryController extends Controller
 {
     /**
-     * Display listing of all discussion categories.
+     * Display listing of all discussion categories with real-time search.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $categories = Category::withCount('questions')
-            ->orderByDesc('questions_count')
-            ->get();
+        $search = trim((string) $request->query('q', ''));
+        $query = Category::withCount('questions');
 
-        return view('categories.index', compact('categories'));
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('description', 'LIKE', "%{$search}%")
+                  ->orWhere('slug', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $categories = $query->orderByDesc('questions_count')->paginate(12)->withQueryString();
+
+        return view('categories.index', compact('categories', 'search'));
     }
 
     /**
-     * Display questions under a specific category.
+     * Display questions under a specific category with search, filtering, and sorting.
      */
     public function show(string $slug, Request $request): View
     {
@@ -30,6 +39,14 @@ class CategoryController extends Controller
 
         $query = Question::with(['user', 'tags', 'acceptedAnswer'])
             ->where('category_id', $category->id);
+
+        $search = trim((string) $request->query('q', ''));
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                  ->orWhere('description', 'LIKE', "%{$search}%");
+            });
+        }
 
         $sort = $request->query('sort', 'newest');
         switch ($sort) {
@@ -47,6 +64,6 @@ class CategoryController extends Controller
 
         $questions = $query->paginate(15)->withQueryString();
 
-        return view('categories.show', compact('category', 'questions', 'sort'));
+        return view('categories.show', compact('category', 'questions', 'sort', 'search'));
     }
 }

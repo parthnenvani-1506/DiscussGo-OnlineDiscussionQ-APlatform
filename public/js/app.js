@@ -38,6 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 9. Reputation Badge Number Formatting + Tooltips
     initReputationBadges();
+
+    // 10. Universal In-Page Realtime Search & Filter Engine
+    initUniversalRealtimeSearch();
 });
 
 /* ==========================================================================
@@ -474,6 +477,166 @@ function initNavbarLiveSearch() {
     document.addEventListener('click', (e) => {
         if (!searchWrapper.contains(e.target)) {
             hideDropdown();
+        }
+    });
+}
+
+/* ==========================================================================
+   0.2 Universal In-Page Realtime Search & Filter Engine
+   ========================================================================== */
+function initUniversalRealtimeSearch() {
+    const realtimeForms = document.querySelectorAll('.dg-realtime-search-form');
+    if (!realtimeForms.length) return;
+
+    realtimeForms.forEach(form => {
+        const textInputs = form.querySelectorAll('input[type="text"], input[type="search"], .dg-realtime-input');
+        const selectInputs = form.querySelectorAll('select');
+        let resultsContainer = document.getElementById('dg-realtime-results-container');
+        
+        let abortController = null;
+        let debounceTimer = null;
+
+        async function fetchRealtimeResults(targetUrl) {
+            if (!resultsContainer) {
+                resultsContainer = document.getElementById('dg-realtime-results-container');
+            }
+            if (!resultsContainer) return;
+
+            if (abortController) {
+                abortController.abort();
+            }
+            abortController = new AbortController();
+
+            resultsContainer.classList.add('dg-realtime-loading');
+
+            try {
+                const res = await fetch(targetUrl, {
+                    signal: abortController.signal,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'text/html, application/xhtml+xml'
+                    }
+                });
+
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+                const htmlText = await res.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlText, 'text/html');
+
+                const newContainer = doc.getElementById('dg-realtime-results-container');
+                if (newContainer && resultsContainer) {
+                    resultsContainer.innerHTML = newContainer.innerHTML;
+                }
+
+                // Update search heading if present (e.g. "Showing X discussions")
+                const oldHeading = document.querySelector('.col-lg-8 .mb-4 p, .d-flex.align-items-center.justify-content-between p');
+                const newHeading = doc.querySelector('.col-lg-8 .mb-4 p, .d-flex.align-items-center.justify-content-between p');
+                if (oldHeading && newHeading) {
+                    oldHeading.innerHTML = newHeading.innerHTML;
+                }
+
+                // Update browser URL without reload
+                window.history.replaceState(null, '', targetUrl);
+
+                // Re-bind likes/votes or tooltips if any
+                initVoting();
+                initBookmarks();
+                initReputationBadges();
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    console.warn('[Realtime Search] Fetch error:', err);
+                }
+            } finally {
+                if (resultsContainer) {
+                    resultsContainer.classList.remove('dg-realtime-loading');
+                }
+            }
+        }
+
+        function triggerSearch() {
+            const formData = new FormData(form);
+            const params = new URLSearchParams();
+
+            for (const [key, val] of formData.entries()) {
+                if (val !== '') {
+                    params.append(key, val);
+                }
+            }
+
+            const action = form.getAttribute('action') || window.location.pathname;
+            const targetUrl = action + (params.toString() ? '?' + params.toString() : '');
+            fetchRealtimeResults(targetUrl);
+        }
+
+        // Debounced text input
+        textInputs.forEach(input => {
+            input.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(triggerSearch, 260);
+            });
+
+            // Prevent form submit reload on Enter key press
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    clearTimeout(debounceTimer);
+                    triggerSearch();
+                }
+            });
+        });
+
+        // Instant select filter change
+        selectInputs.forEach(select => {
+            select.addEventListener('change', () => {
+                clearTimeout(debounceTimer);
+                triggerSearch();
+            });
+        });
+
+        // Prevent standard form submission
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            clearTimeout(debounceTimer);
+            triggerSearch();
+        });
+    });
+
+    // Delegate pagination link clicks inside realtime containers for AJAX pagination
+    document.addEventListener('click', (e) => {
+        const pageLink = e.target.closest('#dg-realtime-results-container .pagination a.page-link');
+        if (pageLink && pageLink.href) {
+            e.preventDefault();
+            const resultsContainer = document.getElementById('dg-realtime-results-container');
+            if (!resultsContainer) return;
+
+            resultsContainer.classList.add('dg-realtime-loading');
+            fetch(pageLink.href, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'text/html, application/xhtml+xml'
+                }
+            })
+            .then(res => res.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newContainer = doc.getElementById('dg-realtime-results-container');
+                if (newContainer) {
+                    resultsContainer.innerHTML = newContainer.innerHTML;
+                    window.history.pushState(null, '', pageLink.href);
+                    resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    initVoting();
+                    initBookmarks();
+                    initReputationBadges();
+                }
+            })
+            .catch(err => console.warn('[Realtime Pagination Error]', err))
+            .finally(() => {
+                if (resultsContainer) {
+                    resultsContainer.classList.remove('dg-realtime-loading');
+                }
+            });
         }
     });
 }
