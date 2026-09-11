@@ -83,23 +83,7 @@ function initNavbarMotion() {
         });
     }
 
-    // 3. 3D Perspective Tilt on Brand Logo (Desktop)
-    if (brand && brandLogo && window.matchMedia('(hover: hover)').matches) {
-        brand.addEventListener('mousemove', (e) => {
-            const rect = brand.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            const rotateY = (x / (rect.width / 2)) * 10;
-            const rotateX = -(y / (rect.height / 2)) * 10;
-            brandLogo.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-2px) scale(1.04)`;
-        });
-
-        brand.addEventListener('mouseleave', () => {
-            brandLogo.style.transform = '';
-        });
-    }
-
-    // 4. Mobile Drawer Auto-Close on Link Click
+    // 3. Mobile Drawer Auto-Close on Link Click
     const mobileCollapse = document.getElementById('navbarContent');
     if (mobileCollapse && window.bootstrap) {
         const navLinks = mobileCollapse.querySelectorAll('.nav-link, .dg-btn-cta, .dropdown-item');
