@@ -18,7 +18,7 @@
     <link rel="apple-touch-icon" href="{{ asset('favicon.png') }}">
 
     <!-- Custom Design System -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}?v=1.2" rel="stylesheet">
 </head>
 <body class="bg-body d-flex align-items-center justify-content-center min-vh-100 py-5">
     @include('layouts.partials.preloader')
@@ -69,6 +69,6 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}?v=1.2"></script>
 </body>
 </html>

@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="{{ asset('favicon.png') }}">
 
     <!-- Custom Design System -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}?v=1.2" rel="stylesheet">
 
     @stack('styles')
 </head>
@@ -288,7 +288,7 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <!-- App JavaScript -->
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}?v=1.2"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

@@ -1335,8 +1335,22 @@ window.DiscussHubPreloader = {
 
             if (!href || href.startsWith('#') || href.startsWith('javascript:') || 
                 target === '_blank' || download !== null || link.classList.contains('no-loader') ||
+                link.classList.contains('dg-brand') || link.closest('.dg-brand') ||
+                link.querySelector('.dg-brand-logo') || link.querySelector('.dg-footer-logo') ||
                 link.dataset.bsToggle || link.dataset.bsDismiss) {
                 return;
+            }
+
+            // Do not show loader if navigating to the exact same page
+            try {
+                const targetUrl = new URL(link.href, window.location.origin);
+                if (targetUrl.pathname === window.location.pathname && 
+                    targetUrl.search === window.location.search && 
+                    targetUrl.hash === window.location.hash) {
+                    return;
+                }
+            } catch (err) {
+                // Ignore invalid URL parse
             }
 
             // If navigating within site
