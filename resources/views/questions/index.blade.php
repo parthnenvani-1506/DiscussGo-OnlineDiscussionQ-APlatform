@@ -67,71 +67,88 @@
         <div id="dg-realtime-results-container" class="dg-realtime-results-wrapper">
             <div class="d-flex flex-column">
                 @forelse($questions as $question)
-                    <div class="question-item">
-                        <!-- Left Stats Sidebar -->
-                        <div class="question-stats-sidebar">
-                            <div class="stat-pill votes">
-                                <span class="fw-bold"><i class="bi bi-heart-fill text-danger" style="font-size:0.75rem;"></i> {{ $question->vote_score }}</span>
-                                <span class="text-muted" style="font-size: 0.65rem;">likes</span>
-                            </div>
+                    <div class="question-item mb-3" data-href="{{ route('questions.show', [$question->id, $question->slug]) }}">
+                        <!-- Row 1: Unified Inline Stats, Category & Special Badges in 1 Row -->
+                        <div class="question-header-meta">
+                            <!-- Likes Pill -->
+                            <span class="stat-pill-inline votes" title="{{ $question->vote_score }} likes">
+                                <i class="bi bi-heart-fill text-danger me-1"></i>
+                                <span class="stat-inline-val">{{ $question->vote_score }}</span>
+                                <span class="stat-inline-txt">likes</span>
+                            </span>
 
-                            <div class="stat-pill answers {{ $question->is_answered ? ($question->accepted_answer_id ? 'accepted' : 'answered') : '' }}">
-                                <span class="fw-bold">
-                                    @if($question->accepted_answer_id)
-                                        <i class="bi bi-check-lg"></i>
-                                    @endif
-                                    {{ $question->answer_count }}
+                            <!-- Answers Pill -->
+                            <span class="stat-pill-inline answers {{ $question->is_answered ? ($question->accepted_answer_id ? 'accepted' : 'answered') : 'unanswered' }}"
+                                  title="{{ $question->answer_count }} answers">
+                                @if($question->accepted_answer_id)
+                                    <i class="bi bi-patch-check-fill me-1"></i>
+                                @elseif($question->is_answered)
+                                    <i class="bi bi-check2 me-1"></i>
+                                @else
+                                    <i class="bi bi-chat-left-dots me-1"></i>
+                                @endif
+                                <span class="stat-inline-val">{{ $question->answer_count }}</span>
+                                <span class="stat-inline-txt">{{ Str::plural('answer', $question->answer_count) }}</span>
+                            </span>
+
+                            <!-- Category Badge -->
+                            <a href="{{ route('categories.show', $question->category->slug) }}" class="category-badge">
+                                <i class="bi bi-folder-fill category-icon"></i>
+                                <span>{{ $question->category->name }}</span>
+                            </a>
+
+                            <!-- AI Synthesized Badge -->
+                            @if($question->ai_summary)
+                                <span class="badge badge-synthesized" title="AI Synthesized Discussion">
+                                    <i class="bi bi-stars me-1 ai-stars-spin"></i> Synthesized
                                 </span>
-                                <span style="font-size: 0.65rem;">{{ Str::plural('answer', $question->answer_count) }}</span>
-                            </div>
+                            @endif
+
+                            <!-- Pinned Badge -->
+                            @if($question->is_pinned)
+                                <span class="badge badge-pinned">
+                                    <i class="bi bi-pin-angle-fill me-1"></i> Pinned
+                                </span>
+                            @endif
                         </div>
 
-                        <!-- Right Question Details -->
-                        <div class="flex-grow-1 min-w-0">
-                            <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
-                                <a href="{{ route('categories.show', $question->category->slug) }}" class="category-badge">
-                                    <i class="bi bi-folder text-primary"></i> {{ $question->category->name }}
-                                </a>
-                                @if($question->is_pinned)
-                                    <span class="badge bg-warning-subtle text-warning border border-warning"><i class="bi bi-pin-angle-fill"></i> Pinned</span>
-                                @endif
+                        <!-- Row 2: Question Title -->
+                        <h5 class="fw-bold question-title-heading">
+                            <a href="{{ route('questions.show', [$question->id, $question->slug]) }}" class="question-title-link">
+                                {{ $question->title }}
+                            </a>
+                        </h5>
+
+                        <!-- Row 3: Question Description Snippet -->
+                        <p class="question-desc-snippet mb-2">
+                            {{ Str::limit(strip_tags($question->description), 140) }}
+                        </p>
+
+                        <!-- Row 4: Question Footer -->
+                        <div class="question-footer-row">
+                            <div class="d-flex flex-wrap gap-1 align-items-center">
+                                @foreach($question->tags as $tag)
+                                    <a href="{{ route('tags.show', $tag->slug) }}" class="tag-badge">
+                                        <span class="tag-hash">#</span>{{ $tag->name }}
+                                    </a>
+                                @endforeach
                             </div>
 
-                            <h5 class="fw-bold mb-2">
-                                <a href="{{ route('questions.show', [$question->id, $question->slug]) }}" class="text-decoration-none text-dark">
-                                    {{ $question->title }}
+                            <div class="d-flex align-items-center gap-2 small text-secondary question-author-meta">
+                                <a href="{{ route('users.show', $question->user->id) }}" class="question-author-link">
+                                    @if($question->user->profile_image && $question->user->profile_image !== 'default_profile.png')
+                                        <img src="{{ asset('profiles/' . $question->user->profile_image) }}" class="rounded-circle object-fit-cover question-author-avatar" width="20" height="20" alt="avatar">
+                                    @else
+                                        <div class="question-author-initial" style="width: 20px; height: 20px; font-size: 0.65rem;">
+                                            {{ strtoupper(substr($question->user->user_name, 0, 1)) }}
+                                        </div>
+                                    @endif
+                                    <span class="author-name-text">{{ $question->user->user_name }}</span>
                                 </a>
-                            </h5>
-
-                            <p class="text-secondary small mb-3 text-truncate" style="max-height: 2.8em;">
-                                {{ Str::limit(strip_tags($question->description), 160) }}
-                            </p>
-
-                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                                <div class="d-flex flex-wrap gap-1">
-                                    @foreach($question->tags as $tag)
-                                        <a href="{{ route('tags.show', $tag->slug) }}" class="tag-badge">
-                                            #{{ $tag->name }}
-                                        </a>
-                                    @endforeach
-                                </div>
-
-                                <div class="d-flex align-items-center gap-2 small text-secondary">
-                                    <a href="{{ route('users.show', $question->user->id) }}" class="text-decoration-none text-dark d-flex align-items-center gap-1 fw-medium">
-                                        @if($question->user->profile_image && $question->user->profile_image !== 'default_profile.png')
-                                            <img src="{{ asset('profiles/' . $question->user->profile_image) }}" class="rounded-circle object-fit-cover" width="20" height="20" alt="avatar">
-                                        @else
-                                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 20px; height: 20px; font-size: 0.65rem;">
-                                                {{ strtoupper(substr($question->user->user_name, 0, 1)) }}
-                                            </div>
-                                        @endif
-                                        {{ $question->user->user_name }}
-                                    </a>
-                                    <span>·</span>
-                                    <span>{{ $question->created_at->diffForHumans() }}</span>
-                                    <span>·</span>
-                                    <span><i class="bi bi-eye"></i> {{ $question->view_count }}</span>
-                                </div>
+                                <span class="meta-dot">·</span>
+                                <span class="meta-time" title="{{ $question->created_at->toDayDateTimeString() }}"><i class="bi bi-clock me-1"></i>{{ $question->created_at->diffForHumans() }}</span>
+                                <span class="meta-dot">·</span>
+                                <span class="meta-views"><i class="bi bi-eye me-1 meta-eye-icon"></i>{{ $question->view_count }}</span>
                             </div>
                         </div>
                     </div>
@@ -144,40 +161,44 @@
                     </div>
                 @endforelse
             </div>
-
-            <!-- Pagination -->
-            <div class="mt-4 d-flex justify-content-center">
-                {{ $questions->links() }}
-            </div>
         </div>
     </div>
 
     <!-- Right Sidebar -->
     <div class="col-lg-4">
-        <!-- Categories Sidebar -->
-        <div class="dg-card p-3 mb-4">
-            <h6 class="fw-bold mb-3 text-dark"><i class="bi bi-grid-fill text-primary me-2"></i> Categories</h6>
-            <div class="d-flex flex-column gap-1">
-                @foreach($categories as $cat)
-                    <a href="{{ route('categories.show', $cat->slug) }}" class="d-flex align-items-center justify-content-between p-2 rounded text-decoration-none {{ request('category') === $cat->slug ? 'bg-primary text-white' : 'text-secondary' }}">
-                        <span class="small fw-medium"><i class="bi bi-folder me-2"></i> {{ $cat->name }}</span>
-                        <span class="badge {{ request('category') === $cat->slug ? 'bg-white text-primary' : 'bg-light text-secondary border' }}">{{ $cat->questions_count }}</span>
-                    </a>
-                @endforeach
+        <div class="dg-sticky-sidebar">
+            <!-- Categories Sidebar -->
+            <div class="dg-card p-3 mb-4">
+                <h6 class="fw-bold mb-3 text-dark"><i class="bi bi-grid-fill text-primary me-2"></i> Categories</h6>
+                <div class="d-flex flex-column gap-1">
+                    @foreach($categories as $cat)
+                        <a href="{{ route('categories.show', $cat->slug) }}" class="d-flex align-items-center justify-content-between p-2 rounded text-decoration-none {{ request('category') === $cat->slug ? 'bg-primary text-white' : 'text-secondary' }}">
+                            <span class="small fw-medium"><i class="bi bi-folder me-2"></i> {{ $cat->name }}</span>
+                            <span class="badge {{ request('category') === $cat->slug ? 'bg-white text-primary' : 'bg-light text-secondary border' }}">{{ $cat->questions_count }}</span>
+                        </a>
+                    @endforeach
+                </div>
             </div>
-        </div>
 
-        <!-- Tags Sidebar -->
-        <div class="dg-card p-3">
-            <h6 class="fw-bold mb-3 text-dark"><i class="bi bi-tags-fill text-primary me-2"></i> Popular Tags</h6>
-            <div class="d-flex flex-wrap gap-1">
-                @foreach($tags as $tag)
-                    <a href="{{ route('tags.show', $tag->slug) }}" class="tag-badge">
-                        #{{ $tag->name }} ({{ $tag->usage_count }})
-                    </a>
-                @endforeach
+            <!-- Tags Sidebar -->
+            <div class="dg-card p-3">
+                <h6 class="fw-bold mb-3 text-dark"><i class="bi bi-tags-fill text-primary me-2"></i> Popular Tags</h6>
+                <div class="d-flex flex-wrap gap-1">
+                    @foreach($tags as $tag)
+                        <a href="{{ route('tags.show', $tag->slug) }}" class="tag-badge">
+                            #{{ $tag->name }} ({{ $tag->usage_count }})
+                        </a>
+                    @endforeach
+                </div>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Full-Width Centered Pagination (Both Left & Right Columns End in the Same Row) -->
+<div class="row mt-2">
+    <div class="col-12 d-flex justify-content-center">
+        {{ $questions->links() }}
     </div>
 </div>
 @endsection

@@ -41,7 +41,143 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 10. Universal In-Page Realtime Search & Filter Engine
     initUniversalRealtimeSearch();
+
+    // 11. 3D Hero Isometric Physics & Interactive Showcase Motion
+    initHeroInteractiveMotion();
+
+    // 12. Full Question Card Clickable Navigation
+    initQuestionCardNavigation();
+
+    // 13. Smart Sticky Sidebar (Natural Scroll & Bottom End-Lock Engine)
+    initSmartStickySidebar();
 });
+
+/* ==========================================================================
+   Hero 3D Isometric Interactive Motion & Parallax Physics Engine
+   ========================================================================== */
+function initHeroInteractiveMotion() {
+    const scene = document.getElementById('hero-3d-scene');
+    const card = document.getElementById('hero-3d-card');
+    const chipTop = document.getElementById('chip-top');
+    const chipBottom = document.getElementById('chip-bottom');
+    const demoLikeBtn = document.getElementById('hero-demo-like-btn');
+    const demoLikeCount = document.getElementById('hero-demo-like-count');
+
+    if (!scene || !card) return;
+
+    let isHovering = false;
+    let rafId = null;
+
+    // Smooth Spring physics values
+    let currentX = -8;
+    let currentY = 4;
+    let targetX = -8;
+    let targetY = 4;
+
+    function onMouseMove(e) {
+        if (window.innerWidth < 992) return;
+        const rect = scene.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        // Calculate rotation angles (range -12deg to +12deg)
+        targetY = ((x - centerX) / centerX) * 14;
+        targetX = -((y - centerY) / centerY) * 12;
+
+        // Dynamic specular highlight coords in percentage
+        const mousePercentX = ((x / rect.width) * 100).toFixed(1);
+        const mousePercentY = ((y / rect.height) * 100).toFixed(1);
+        card.style.setProperty('--mouse-x', `${mousePercentX}%`);
+        card.style.setProperty('--mouse-y', `${mousePercentY}%`);
+
+        if (!isHovering) {
+            isHovering = true;
+            loop();
+        }
+    }
+
+    function loop() {
+        if (!isHovering) return;
+
+        // Eased interpolation (lerp)
+        currentX += (targetX - currentX) * 0.12;
+        currentY += (targetY - currentY) * 0.12;
+
+        card.style.transform = `rotateX(${currentX.toFixed(2)}deg) rotateY(${currentY.toFixed(2)}deg) translateZ(16px)`;
+
+        if (chipTop) {
+            const shiftX = (currentY * 0.4).toFixed(1);
+            const shiftY = (-currentX * 0.4).toFixed(1);
+            chipTop.style.transform = `translate3d(${shiftX}px, ${shiftY}px, 45px) rotate(2deg)`;
+        }
+
+        if (chipBottom) {
+            const shiftX = (-currentY * 0.35).toFixed(1);
+            const shiftY = (currentX * 0.35).toFixed(1);
+            chipBottom.style.transform = `translate3d(${shiftX}px, ${shiftY}px, 35px) rotate(-2deg)`;
+        }
+
+        rafId = requestAnimationFrame(loop);
+    }
+
+    function onMouseLeave() {
+        isHovering = false;
+        if (rafId) cancelAnimationFrame(rafId);
+
+        card.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease';
+        card.style.transform = 'rotateY(-8deg) rotateX(4deg) translateZ(10px)';
+
+        if (chipTop) {
+            chipTop.style.transition = 'transform 0.6s ease';
+            chipTop.style.transform = 'translateZ(40px) rotate(2deg)';
+        }
+
+        if (chipBottom) {
+            chipBottom.style.transition = 'transform 0.6s ease';
+            chipBottom.style.transform = 'translateZ(30px) rotate(-2deg)';
+        }
+
+        setTimeout(() => {
+            card.style.transition = '';
+            if (chipTop) chipTop.style.transition = '';
+            if (chipBottom) chipBottom.style.transition = '';
+        }, 600);
+    }
+
+    scene.addEventListener('mousemove', onMouseMove, { passive: true });
+    scene.addEventListener('mouseleave', onMouseLeave);
+
+    // Interactive Demo Like Simulation Button
+    if (demoLikeBtn && demoLikeCount) {
+        let isLiked = false;
+        let likes = 48;
+
+        demoLikeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            isLiked = !isLiked;
+            likes = isLiked ? 49 : 48;
+            demoLikeCount.textContent = likes;
+
+            const icon = demoLikeBtn.querySelector('i');
+            if (isLiked) {
+                demoLikeBtn.style.color = '#ef4444';
+                if (icon) icon.className = 'bi bi-heart-fill text-danger hero-heart-icon';
+                if (window.showToast) {
+                    showToast('Liked demo solution (+1)', 'success');
+                }
+            } else {
+                demoLikeBtn.style.color = '#f87171';
+                if (window.showToast) {
+                    showToast('Removed like from demo', 'info');
+                }
+            }
+        });
+    }
+}
 
 /* ==========================================================================
    0. 3D Navbar Motion & Micro-Interactions
@@ -1376,5 +1512,114 @@ function initPreloader() {
 // Immediate execution if window loaded before script execution
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
     window.DiscussHubPreloader.init();
+}
+
+/* ==========================================================================
+   12. Entire Question Card Clickable Navigation Engine
+   ========================================================================== */
+function initQuestionCardNavigation() {
+    document.addEventListener('click', (e) => {
+        const card = e.target.closest('.question-item');
+        if (!card) return;
+
+        // Ignore clicks on inner interactive targets (category badge, tags, author link, buttons, etc.)
+        const interactive = e.target.closest('a, button, input, select, textarea, label, [role="button"], .dropdown, .dropdown-menu');
+        if (interactive && interactive !== card) {
+            return;
+        }
+
+        // Ignore click if user is selecting text
+        const selection = window.getSelection();
+        if (selection && selection.toString().trim().length > 0) {
+            return;
+        }
+
+        const href = card.getAttribute('data-href') || card.querySelector('.question-title-link')?.getAttribute('href');
+        if (!href) return;
+
+        // Support Ctrl/Cmd + click to open in new tab
+        if (e.metaKey || e.ctrlKey) {
+            window.open(href, '_blank');
+        } else if (e.button === 0) {
+            if (window.DiscussHubPreloader) {
+                window.DiscussHubPreloader.show();
+            }
+            window.location.href = href;
+        }
+    });
+
+    // Middle mouse button click support
+    document.addEventListener('auxclick', (e) => {
+        if (e.button !== 1) return;
+        const card = e.target.closest('.question-item');
+        if (!card) return;
+
+        const interactive = e.target.closest('a, button, input, select, textarea');
+        if (interactive && interactive !== card) return;
+
+        const href = card.getAttribute('data-href') || card.querySelector('.question-title-link')?.getAttribute('href');
+        if (href) {
+            window.open(href, '_blank');
+        }
+    });
+}
+
+/* ==========================================================================
+   13. Smart Sticky Sidebar - Natural Page Scroll & Bottom End-Lock Engine
+   ========================================================================== */
+function initSmartStickySidebar() {
+    const sidebars = document.querySelectorAll('.dg-sticky-sidebar');
+    if (!sidebars.length) return;
+
+    const navbar = document.querySelector('.dg-navbar');
+    const topMargin = navbar ? navbar.offsetHeight + 18 : 86;
+    const bottomMargin = 24;
+
+    function updateStickyPositions() {
+        if (window.innerWidth < 992) {
+            sidebars.forEach(sidebar => {
+                sidebar.style.position = '';
+                sidebar.style.top = '';
+            });
+            return;
+        }
+
+        const vh = window.innerHeight;
+
+        sidebars.forEach(sidebar => {
+            const sidebarH = sidebar.offsetHeight;
+            const availableH = vh - topMargin - bottomMargin;
+
+            sidebar.style.position = 'sticky';
+
+            if (sidebarH <= availableH) {
+                // If sidebar fits completely on screen, pin neatly below navbar
+                sidebar.style.top = `${topMargin}px`;
+            } else {
+                // If sidebar is taller than viewport, scroll naturally through all widgets
+                // until bottom widget is reached, then lock bottom edge firmly so right side is never empty!
+                const bottomPinnedTop = vh - sidebarH - bottomMargin;
+                sidebar.style.top = `${bottomPinnedTop}px`;
+            }
+        });
+    }
+
+    // Event listeners
+    window.addEventListener('resize', updateStickyPositions, { passive: true });
+    window.addEventListener('orientationchange', updateStickyPositions, { passive: true });
+
+    // Handle dynamic DOM changes or image loads inside sidebar
+    if (window.ResizeObserver) {
+        const ro = new ResizeObserver(() => {
+            updateStickyPositions();
+        });
+        sidebars.forEach(sidebar => ro.observe(sidebar));
+    }
+
+    // Initial calculation
+    updateStickyPositions();
+
+    // Re-verify after font/image load
+    window.addEventListener('load', updateStickyPositions, { once: true });
 }
 

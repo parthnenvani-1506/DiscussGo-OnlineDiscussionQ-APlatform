@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="{{ asset('favicon.png') }}">
 
     <!-- Custom Design System -->
-    <link href="{{ asset('css/app.css') }}?v=1.5" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}?v=4.3" rel="stylesheet">
 
     @stack('styles')
 </head>
@@ -232,48 +232,55 @@
 
     <!-- Footer -->
     <footer class="dg-footer">
-        <div class="container">
+        <div class="container" style="max-width: 1440px;">
             <div class="row g-4 mb-4">
                 <div class="col-lg-4">
-                    <a href="{{ route('home') }}" class="text-decoration-none d-inline-block mb-3">
+                    <a href="{{ route('home') }}" class="text-decoration-none d-inline-block mb-3 dg-footer-logo-link">
                         <img src="{{ asset('logo.png') }}" alt="DiscussHub" class="dg-footer-logo">
                     </a>
-                    <p class="small text-secondary mb-3">
+                    <p class="small text-secondary mb-3 pe-lg-4" style="line-height: 1.6;">
                         Open knowledge sharing and Q&amp;A platform empowering curious minds to ask questions, share perspectives, and discover verified answers.
                     </p>
-                    <div class="d-flex gap-3 text-secondary">
-                        <span class="small"><i class="bi bi-globe text-primary me-1"></i> Open Knowledge</span>
-                        <span class="small"><i class="bi bi-shield-check text-success me-1"></i> Verified Solutions</span>
+                    <div class="d-flex flex-wrap align-items-center gap-2 pt-1">
+                        <span class="dg-footer-badge">
+                            <i class="bi bi-globe2 text-primary me-1"></i> Open Knowledge
+                        </span>
+                        <span class="dg-footer-badge">
+                            <i class="bi bi-patch-check-fill text-success me-1"></i> Verified Solutions
+                        </span>
                     </div>
                 </div>
                 <div class="col-6 col-lg-2">
-                    <h6 class="fw-bold mb-3 small text-uppercase">Discover</h6>
-                    <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
-                        <li><a href="{{ route('questions.index') }}" class="text-secondary text-decoration-none">All Discussions</a></li>
-                        <li><a href="{{ route('categories.index') }}" class="text-secondary text-decoration-none">Topics</a></li>
-                        <li><a href="{{ route('tags.index') }}" class="text-secondary text-decoration-none">Tags</a></li>
-                        <li><a href="{{ route('search') }}" class="text-secondary text-decoration-none">Search</a></li>
+                    <h6 class="fw-bold mb-3 small text-uppercase dg-footer-heading">Discover</h6>
+                    <ul class="list-unstyled small d-flex flex-column gap-2 mb-0 dg-footer-nav">
+                        <li><a href="{{ route('questions.index') }}" class="text-secondary text-decoration-none dg-footer-link">All Discussions</a></li>
+                        <li><a href="{{ route('categories.index') }}" class="text-secondary text-decoration-none dg-footer-link">Topics</a></li>
+                        <li><a href="{{ route('tags.index') }}" class="text-secondary text-decoration-none dg-footer-link">Tags</a></li>
+                        <li><a href="{{ route('search') }}" class="text-secondary text-decoration-none dg-footer-link">Search</a></li>
                     </ul>
                 </div>
                 <div class="col-6 col-lg-3">
-                    <h6 class="fw-bold mb-3 small text-uppercase">Intelligent Features</h6>
-                    <ul class="list-unstyled small d-flex flex-column gap-2 mb-0">
-                        <li><span class="text-secondary">Multi-Answer Consensus</span></li>
-                        <li><span class="text-secondary">Semantic Search Matching</span></li>
-                        <li><span class="text-secondary">Taxonomy Tag Extractor</span></li>
-                        <li><span class="text-secondary">Community Reputation System</span></li>
+                    <h6 class="fw-bold mb-3 small text-uppercase dg-footer-heading">Intelligent Features</h6>
+                    <ul class="list-unstyled small d-flex flex-column gap-2 mb-0 dg-footer-features">
+                        <li><span class="text-secondary dg-feature-text">Multi-Answer Consensus</span></li>
+                        <li><span class="text-secondary dg-feature-text">Semantic Search Matching</span></li>
+                        <li><span class="text-secondary dg-feature-text">Taxonomy Tag Extractor</span></li>
+                        <li><span class="text-secondary dg-feature-text">Community Reputation System</span></li>
                     </ul>
                 </div>
                 <div class="col-lg-3">
-                    <h6 class="fw-bold mb-3 small text-uppercase">Support & Inquiries</h6>
-                    <p class="small text-secondary mb-2">Have a question or feedback? Reach out to our community team.</p>
-                    <a href="{{ route('contact.show') }}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">Contact Team</a>
+                    <h6 class="fw-bold mb-3 small text-uppercase dg-footer-heading">Support &amp; Inquiries</h6>
+                    <p class="small text-secondary mb-3" style="line-height: 1.6;">
+                        Have a question or feedback? Reach out to our community team.
+                    </p>
+                    <a href="{{ route('contact.show') }}" class="dg-footer-contact-btn text-decoration-none">
+                        <i class="bi bi-envelope me-2"></i> Contact Team
+                    </a>
                 </div>
             </div>
-            <hr class="border-secondary opacity-25">
-            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 small text-secondary">
-                <div>&copy; {{ date('Y') }} DiscussHub. A platform for curious minds.</div>
-                <div>Built with Laravel & Bootstrap.</div>
+            <hr class="border-secondary opacity-25 my-4">
+            <div class="text-center small text-secondary">
+                &copy; {{ date('Y') }} <strong class="text-dark fw-semibold">DiscussHub</strong>. A platform for curious minds.
             </div>
         </div>
     </footer>
@@ -288,7 +295,7 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <!-- App JavaScript -->
-    <script src="{{ asset('js/app.js') }}?v=1.2"></script>
+    <script src="{{ asset('js/app.js') }}?v=1.6"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
