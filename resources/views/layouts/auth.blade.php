@@ -18,7 +18,7 @@
     <link rel="apple-touch-icon" href="{{ asset('favicon.png') }}">
 
     <!-- Custom Design System -->
-    <link href="{{ asset('css/app.css') }}?v=1.2" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}?v=1.5" rel="stylesheet">
 </head>
 <body class="bg-body d-flex align-items-center justify-content-center min-vh-100 py-5">
     @include('layouts.partials.preloader')

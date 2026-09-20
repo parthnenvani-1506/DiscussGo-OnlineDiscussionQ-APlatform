@@ -21,7 +21,7 @@
     <link rel="apple-touch-icon" href="{{ asset('favicon.png') }}">
 
     <!-- Custom Design System -->
-    <link href="{{ asset('css/app.css') }}?v=1.2" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}?v=1.5" rel="stylesheet">
 
     @stack('styles')
 </head>
@@ -29,7 +29,7 @@
     @include('layouts.partials.preloader')
 
     <!-- Moderator Top Navbar -->
-    <nav class="dg-navbar navbar navbar-expand-lg py-2">
+    <nav class="dg-navbar navbar navbar-expand-lg sticky-top py-2">
         <div class="container-fluid px-4">
             <a class="dg-brand text-decoration-none d-inline-flex align-items-center gap-2" href="{{ route('moderator.dashboard') }}">
                 <img src="{{ asset('logo.png') }}" alt="DiscussHub" class="dg-brand-logo">
