@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateQuestionRequest;
 use App\Models\Category;
 use App\Models\Question;
 use App\Models\Tag;
+use App\Models\User;
 use App\Services\BadgeService;
 use App\Services\ModerationService;
 use App\Services\ReputationService;
@@ -86,10 +87,11 @@ class QuestionController extends Controller
         }
 
         $questions = $query->paginate(15)->withQueryString();
-        $categories = Category::withCount('questions')->get();
+        $categories = Category::withCount('questions')->orderByDesc('questions_count')->get();
         $tags = Tag::orderByDesc('usage_count')->take(20)->get();
+        $topUsers = User::where('is_suspended', false)->orderByDesc('reputation')->take(5)->get();
 
-        return view('questions.index', compact('questions', 'categories', 'tags', 'sort'));
+        return view('questions.index', compact('questions', 'categories', 'tags', 'sort', 'topUsers'));
     }
 
     /**

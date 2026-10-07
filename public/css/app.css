@@ -1225,48 +1225,44 @@ a:hover {
 }
 
 
-/* 3D Glass Dropdown Menus */
+/* Clean & Smooth Dropdown Menus */
 .dropdown-menu {
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
-    padding: 0.5rem;
-    transform-origin: top right;
-    animation: dropdown-entrance 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: var(--radius-lg, 12px);
+    box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04);
+    padding: 0.45rem;
+    margin-top: 4px !important;
+    animation: dropdown-fade-in 0.12s ease-out;
 }
 
 [data-bs-theme="dark"] .dropdown-menu {
-    background: rgba(19, 29, 49, 0.95);
-    backdrop-filter: blur(16px);
-    border-color: var(--border);
-    box-shadow: 0 20px 40px -4px rgba(0, 0, 0, 0.6);
+    background: #0d1424;
+    border-color: rgba(34, 49, 78, 0.85);
+    box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.6);
 }
 
-@keyframes dropdown-entrance {
+@keyframes dropdown-fade-in {
     from {
         opacity: 0;
-        transform: scale(0.94) translateY(-8px);
     }
     to {
         opacity: 1;
-        transform: scale(1) translateY(0);
     }
 }
 
 .dropdown-item {
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-md, 8px);
     padding: 0.5rem 0.85rem;
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--text-primary);
-    transition: all 0.18s ease;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .dropdown-item:hover {
-    background: var(--primary-light);
-    color: var(--primary);
-    transform: translateX(3px);
+    background: var(--primary-light, rgba(37, 99, 235, 0.08));
+    color: var(--brand-primary, #2563eb);
 }
 
 .dropdown-item.text-danger:hover {
@@ -2299,13 +2295,13 @@ a:hover {
 
 @keyframes tab-sparkle-spin {
     0% { transform: rotate(0deg) scale(1); }
-    50% { transform: rotate(180deg) scale(1.25); filter: drop-shadow(0 0 4px rgba(37, 99, 235, 0.6)); }
+    50% { transform: rotate(180deg) scale(1.2); }
     100% { transform: rotate(360deg) scale(1); }
 }
 
 @keyframes tab-fire-flicker {
-    0% { transform: scale(1) rotate(-3deg); filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.4)); }
-    100% { transform: scale(1.2) rotate(3deg); filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.8)); }
+    0% { transform: scale(1) rotate(-3deg); }
+    100% { transform: scale(1.18) rotate(3deg); }
 }
 
 @keyframes tab-clock-tick {
@@ -2412,127 +2408,31 @@ a:hover {
     cursor: pointer;
     background-color: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-radius: 12px;
     padding: 1.1rem 1.35rem;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
     display: flex;
     flex-direction: column;
     position: relative;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
 [data-bs-theme="dark"] .question-item {
     background: #0d1424;
     border-color: rgba(34, 49, 78, 0.8);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-}
-
-/* Top Radiant Aura Shimmer Border (Pure Electric Royal Blue #2563eb & Flame Orange #ff7a00) */
-.question-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2.5px;
-    background: linear-gradient(90deg, transparent 0%, var(--brand-primary, #2563eb) 25%, #3b82f6 50%, var(--brand-accent-orange, #ff7a00) 75%, #ff9100 90%, transparent 100%);
-    opacity: 0;
-    transform: scaleX(0.3);
-    transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-    pointer-events: none;
-    z-index: 3;
-    box-shadow: 0 0 10px rgba(255, 122, 0, 0.35);
-}
-
-[data-bs-theme="dark"] .question-item::before {
-    background: linear-gradient(90deg, transparent 0%, #3b82f6 25%, #60a5fa 50%, #ff7a00 75%, #ffaa47 90%, transparent 100%);
-    box-shadow: 0 0 12px rgba(255, 122, 0, 0.5);
-}
-
-/* Glassmorphic Specular Light Sweep (Crystalline reflection passes across card with subtle #ff7a00 flame warmth) */
-.question-item::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -130%;
-    width: 60%;
-    height: 200%;
-    background: linear-gradient(
-        105deg,
-        transparent 20%,
-        rgba(255, 255, 255, 0.6) 45%,
-        rgba(37, 99, 235, 0.22) 52%,
-        rgba(255, 122, 0, 0.2) 60%,
-        transparent 75%
-    );
-    transform: rotate(25deg);
-    pointer-events: none;
-    z-index: 2;
-    opacity: 0;
-}
-
-[data-bs-theme="dark"] .question-item::after {
-    background: linear-gradient(
-        105deg,
-        transparent 20%,
-        rgba(255, 255, 255, 0.2) 46%,
-        rgba(59, 130, 246, 0.35) 52%,
-        rgba(255, 122, 0, 0.25) 60%,
-        transparent 75%
-    );
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .question-item:hover {
-    border-color: rgba(37, 99, 235, 0.45);
-    box-shadow: 0 16px 36px -10px rgba(37, 99, 235, 0.16), 0 0 20px -4px rgba(255, 122, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(37, 99, 235, 0.12);
-    transform: translateY(-3.5px);
+    border-color: rgba(37, 99, 235, 0.35);
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+    transform: translateY(-2px);
 }
 
 [data-bs-theme="dark"] .question-item:hover {
-    border-color: rgba(59, 130, 246, 0.55);
-    box-shadow: 0 20px 42px -12px rgba(0, 0, 0, 0.7), 0 0 25px rgba(37, 99, 235, 0.25), 0 0 20px rgba(255, 122, 0, 0.2), 0 0 0 1px rgba(59, 130, 246, 0.25);
-    transform: translateY(-3.5px);
-}
-
-.question-item:hover::before {
-    opacity: 1;
-    transform: scaleX(1);
-}
-
-.question-item:hover::after {
-    opacity: 1;
-    animation: specular-sheen-sweep 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes specular-sheen-sweep {
-    0% {
-        left: -130%;
-        opacity: 0;
-    }
-    15% {
-        opacity: 1;
-    }
-    100% {
-        left: 170%;
-        opacity: 0;
-    }
-}
-
-/* Card Hover Micro-Interactions */
-.question-item:hover .question-title-heading {
-    transform: translateX(3px);
-    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.question-item:hover .category-icon {
-    transform: rotate(-10deg) scale(1.15);
-}
-
-.question-item:hover .question-author-avatar,
-.question-item:hover .question-author-initial {
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.35);
-    transition: box-shadow 0.25s ease;
+    border-color: rgba(59, 130, 246, 0.45);
+    box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(59, 130, 246, 0.2);
+    transform: translateY(-2px);
 }
 
 /* Unified Question Header Meta Row & Precise Height Equality */
@@ -2868,15 +2768,6 @@ a:hover {
     opacity: 0.5;
 }
 
-.question-item:hover .meta-eye-icon {
-    animation: meta-eye-blink 1s ease;
-}
-
-@keyframes meta-eye-blink {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.25); color: var(--brand-primary, #2563eb); }
-}
-
 /* ==========================================================================
    3. Sticky Sidebar System - Natural Page Scroll & End-Lock Fix
    ========================================================================== */
@@ -2972,6 +2863,34 @@ a:hover {
     opacity: 1;
     transform: translateX(0);
     color: var(--brand-primary, #2563eb);
+}
+
+.sidebar-category-row.active {
+    background: var(--brand-primary, #2563eb) !important;
+    border-color: var(--brand-primary, #2563eb) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3) !important;
+}
+
+.sidebar-category-row.active .sidebar-cat-icon {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+
+.sidebar-category-row.active .sidebar-cat-name {
+    color: #ffffff !important;
+}
+
+.sidebar-category-row.active .sidebar-cat-badge {
+    background: #ffffff !important;
+    color: var(--brand-primary, #2563eb) !important;
+    border-color: transparent !important;
+}
+
+.sidebar-category-row.active .sidebar-cat-arrow {
+    opacity: 1;
+    transform: translateX(0);
+    color: #ffffff !important;
 }
 
 /* Leaderboard Row */
@@ -3120,17 +3039,238 @@ a:hover {
     border: 1px solid var(--border);
     color: var(--text-primary);
     border-radius: var(--radius-md);
-    padding: 0.65rem 0.95rem;
-    font-size: 0.925rem;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
 .form-control-dg:focus {
     background-color: var(--bg-primary);
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--primary-light);
+    border-color: var(--brand-primary, #2563eb);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     outline: none;
     color: var(--text-primary);
+}
+
+/* Unified Single-Unit Search Bar */
+.dg-search-bar-unified {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0 0.85rem;
+    height: 40px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.dg-search-bar-unified:hover {
+    border-color: var(--border-hover, rgba(37, 99, 235, 0.4));
+}
+
+.dg-search-bar-unified:focus-within {
+    border-color: var(--brand-primary, #2563eb);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    background-color: var(--bg-primary);
+}
+
+.dg-search-bar-unified .search-icon {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-right: 0.65rem;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+}
+
+.dg-search-bar-unified:focus-within .search-icon {
+    color: var(--brand-primary, #2563eb);
+}
+
+.dg-search-bar-unified .search-input {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    color: var(--text-primary) !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    width: 100%;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.dg-search-bar-unified .search-input::placeholder {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* Custom Professional Dropdown Triggers & Menus */
+.dg-custom-dropdown-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 40px;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    border-radius: var(--radius-md);
+    padding: 0 0.85rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.dg-custom-dropdown-btn:hover {
+    border-color: var(--border-hover, rgba(37, 99, 235, 0.4));
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.dg-custom-dropdown-btn:focus,
+.dg-custom-dropdown-btn.show,
+.dg-custom-dropdown-btn[aria-expanded="true"] {
+    border-color: var(--brand-primary, #2563eb) !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+.dg-custom-dropdown-btn .dropdown-btn-label {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dg-custom-dropdown-btn .dropdown-chevron {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    transition: transform 0.2s ease;
+    margin-left: 0.5rem;
+    flex-shrink: 0;
+}
+
+.dg-custom-dropdown-btn.show .dropdown-chevron,
+.dg-custom-dropdown-btn[aria-expanded="true"] .dropdown-chevron {
+    transform: rotate(180deg);
+    color: var(--brand-primary, #2563eb);
+}
+
+.dg-custom-dropdown-menu {
+    min-width: 100%;
+    max-height: 280px;
+    overflow-y: auto;
+    border-radius: var(--radius-lg, 12px);
+    padding: 0.35rem;
+    border: 1px solid var(--border);
+    box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.04);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+}
+
+.dropdown-menu::-webkit-scrollbar,
+.dg-custom-dropdown-menu::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+.dropdown-menu::-webkit-scrollbar-track,
+.dg-custom-dropdown-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb,
+.dg-custom-dropdown-menu::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.35);
+    border-radius: 10px;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb:hover,
+.dg-custom-dropdown-menu::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.6);
+}
+
+[data-bs-theme="dark"] .dg-custom-dropdown-menu {
+    background: #0d1424;
+    border-color: rgba(34, 49, 78, 0.85);
+    box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.6);
+    scrollbar-color: rgba(148, 163, 184, 0.25) transparent;
+}
+
+[data-bs-theme="dark"] .dropdown-menu::-webkit-scrollbar-thumb,
+[data-bs-theme="dark"] .dg-custom-dropdown-menu::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.25);
+}
+
+[data-bs-theme="dark"] .dropdown-menu::-webkit-scrollbar-thumb:hover,
+[data-bs-theme="dark"] .dg-custom-dropdown-menu::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.45);
+}
+
+.dg-custom-dropdown-menu .dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: var(--radius-sm, 6px);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.dg-custom-dropdown-menu .dropdown-item:hover {
+    background-color: var(--primary-light, rgba(37, 99, 235, 0.08));
+    color: var(--brand-primary, #2563eb);
+}
+
+.dg-custom-dropdown-menu .dropdown-item.active {
+    background-color: rgba(37, 99, 235, 0.12) !important;
+    color: var(--brand-primary, #2563eb) !important;
+    font-weight: 600;
+}
+
+.dg-custom-dropdown-menu .dropdown-item .badge-count {
+    font-size: 0.725rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: var(--radius-full);
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+
+.input-group .input-group-text {
+    background-color: var(--bg-primary);
+    border-color: var(--border);
+    color: var(--text-muted);
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+    padding: 0.55rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+.input-group > .form-control-dg:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+select.form-control-dg {
+    cursor: pointer;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] select.form-control-dg option {
+    background-color: #0f172a;
+    color: #f1f5f9;
 }
 
 /* Admin Sidebar */

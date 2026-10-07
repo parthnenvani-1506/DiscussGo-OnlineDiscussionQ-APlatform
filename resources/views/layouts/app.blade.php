@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" href="{{ asset('favicon.png') }}">
 
     <!-- Custom Design System -->
-    <link href="{{ asset('css/app.css') }}?v=4.3" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}?v=5.1" rel="stylesheet">
 
     @stack('styles')
 </head>
