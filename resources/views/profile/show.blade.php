@@ -48,7 +48,7 @@
                         </a>
                         @if($user->role === 'moderator')
                             <a href="{{ route('moderator.dashboard') }}" class="btn btn-warning rounded-pill px-4">
-                                <i class="bi bi-shield-half me-1"></i> Moderator Panel
+                                <i class="bi bi-shield-shaded me-1"></i> Moderator Panel
                             </a>
                         @endif
                     </div>

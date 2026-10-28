@@ -42,8 +42,13 @@
     @include('layouts.partials.preloader')
 
     @php
-        $pendingReportsCount = \Illuminate\Support\Facades\Schema::hasTable('reports') ? \App\Models\Report::where('status', 'pending')->count() : 0;
-        $unreadContactsCount = \Illuminate\Support\Facades\Schema::hasTable('contact_messages') ? \App\Models\ContactMessage::where('is_read', false)->count() : 0;
+        try {
+            $pendingReportsCount = \App\Models\Report::where('status', 'pending')->count();
+            $unreadContactsCount = \App\Models\ContactMessage::where('is_read', false)->count();
+        } catch (\Throwable $e) {
+            $pendingReportsCount = 0;
+            $unreadContactsCount = 0;
+        }
     @endphp
 
     <!-- Mobile Sidebar Backdrop Overlay -->
@@ -154,7 +159,7 @@
             </li>
             <li class="nav-item">
                 <a href="{{ route('admin.moderators.index') }}" class="admin-nav-link {{ request()->routeIs('admin.moderators.*') ? 'active' : '' }}" data-tooltip="Moderators">
-                    <span class="nav-icon"><i class="bi bi-shield-half"></i></span>
+                    <span class="nav-icon"><i class="bi bi-shield-shaded"></i></span>
                     <span class="nav-text">Moderators</span>
                 </a>
             </li>

@@ -47,7 +47,7 @@
 
                 <div class="dropdown">
                     <button class="dg-user-pill border-0 btn" data-bs-toggle="dropdown">
-                        <i class="bi bi-shield-half text-warning fs-5"></i>
+                        <i class="bi bi-shield-shaded text-warning fs-5"></i>
                         <span class="fw-semibold small">{{ auth()->user()->user_name }}</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm border mt-2">

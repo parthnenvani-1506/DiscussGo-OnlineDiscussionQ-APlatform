@@ -13,7 +13,7 @@
     <!-- Current Moderators -->
     <div class="col-lg-8">
         <div class="dg-card p-4 mb-4">
-            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-shield-half text-warning me-2"></i> Current Moderators ({{ $moderators->count() }})</h5>
+            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-shield-shaded text-warning me-2"></i> Current Moderators ({{ $moderators->count() }})</h5>
             @if($moderators->isNotEmpty())
                 <div class="table-responsive">
                     <table class="table table-hover align-middle small mb-0">
@@ -69,7 +69,7 @@
                 </div>
             @else
                 <div class="text-center py-4 text-muted small">
-                    <i class="bi bi-shield-half fs-3 d-block mb-2"></i>
+                    <i class="bi bi-shield-shaded fs-3 d-block mb-2"></i>
                     No moderators appointed yet. Appoint users from the Users management page.
                 </div>
             @endif

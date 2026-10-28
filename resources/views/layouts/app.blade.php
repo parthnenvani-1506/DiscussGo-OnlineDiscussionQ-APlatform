@@ -184,7 +184,7 @@
 
                         @if(auth()->user()->role === 'moderator')
                             <a href="{{ route('moderator.dashboard') }}" class="btn btn-warning btn-sm rounded-pill px-3 fw-semibold d-inline-flex align-items-center justify-content-center gap-1 w-100 w-lg-auto">
-                                <i class="bi bi-shield-half"></i> Mod Panel
+                                <i class="bi bi-shield-shaded"></i> Mod Panel
                             </a>
                         @endif
                     @else
