@@ -9,11 +9,13 @@
         <p class="small mb-0" style="color: var(--admin-text-secondary);">Real-time telemetry, platform health, and content moderation status</p>
     </div>
     <div class="d-flex align-items-center gap-2">
-        <a href="{{ route('admin.ai-center.index') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-none fw-medium d-inline-flex align-items-center gap-1.5">
-            <i class="bi bi-cpu text-primary"></i> AI Center
+        <a href="{{ route('admin.ai-center.index') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1.5 shadow-none fw-medium d-inline-flex align-items-center gap-2">
+            <i class="bi bi-cpu fs-6"></i>
+            <span>AI Center</span>
         </a>
-        <a href="{{ route('admin.reports.index') }}" class="btn btn-sm {{ $kpis['pending_reports'] > 0 ? 'btn-danger' : 'btn-outline-secondary' }} rounded-pill px-3 shadow-none fw-medium d-inline-flex align-items-center gap-1.5">
-            <i class="bi bi-flag"></i> Reports ({{ $kpis['pending_reports'] }})
+        <a href="{{ route('admin.reports.index') }}" class="btn btn-sm {{ $kpis['pending_reports'] > 0 ? 'btn-danger' : 'btn-outline-danger' }} rounded-pill px-3 py-1.5 shadow-none fw-medium d-inline-flex align-items-center gap-2">
+            <i class="bi bi-flag fs-6"></i>
+            <span>Reports ({{ $kpis['pending_reports'] }})</span>
         </a>
     </div>
 </div>
