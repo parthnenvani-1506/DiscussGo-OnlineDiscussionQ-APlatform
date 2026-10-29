@@ -26,7 +26,14 @@ class ReportController extends Controller
 
         $reports = $query->latest()->paginate(20)->withQueryString();
 
-        return view('admin.reports.index', compact('reports', 'status'));
+        $counts = [
+            'pending'   => Report::where('status', 'pending')->count(),
+            'resolved'  => Report::where('status', 'resolved')->count(),
+            'dismissed' => Report::where('status', 'dismissed')->count(),
+            'all'       => Report::count(),
+        ];
+
+        return view('admin.reports.index', compact('reports', 'status', 'counts'));
     }
 
     /**

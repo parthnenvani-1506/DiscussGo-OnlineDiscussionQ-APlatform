@@ -1056,6 +1056,121 @@ body.admin-body {
     background: var(--admin-primary-light);
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   MODERATION & FILTER TABS (DiscussHub Unified System)
+   ══════════════════════════════════════════════════════════════════════════ */
+.filter-tabs-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px;
+    background: var(--admin-card-bg);
+    border: 1px solid var(--admin-border);
+    border-radius: 50rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.filter-tab-item {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 16px;
+    border-radius: 50rem;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--admin-text-secondary);
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    border: 1px solid transparent;
+}
+
+.filter-tab-item:hover {
+    color: var(--admin-primary);
+    background: var(--admin-primary-light);
+}
+
+.filter-tab-item .tab-icon {
+    font-size: 14px;
+    margin-right: 7px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.filter-tab-item .tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-left: 8px;
+    background: rgba(100, 116, 139, 0.12);
+    color: var(--admin-text-secondary);
+    transition: all 0.2s ease;
+}
+
+/* Active Tab: DiscussHub Brand Royal Blue */
+.filter-tab-item.active {
+    color: #ffffff !important;
+    background: var(--admin-primary) !important;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3) !important;
+}
+
+.filter-tab-item.active .tab-icon {
+    color: #ffffff !important;
+}
+
+.filter-tab-item.active .tab-count {
+    background: rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+}
+
+.filter-tab-item.pending-alert:not(.active) .tab-count {
+    background: rgba(220, 38, 38, 0.12);
+    color: var(--admin-danger);
+}
+
+/* Leaderboard & Analytics Rank Badges (Sopan Style) */
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.rank-badge.rank-1 {
+    background: rgba(245, 158, 11, 0.15);
+    color: #b45309;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.rank-badge.rank-2 {
+    background: rgba(148, 163, 184, 0.2);
+    color: #475569;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.rank-badge.rank-3 {
+    background: rgba(217, 119, 6, 0.12);
+    color: #92400e;
+    border: 1px solid rgba(217, 119, 6, 0.25);
+}
+
+.rank-badge.rank-other {
+    background: var(--admin-canvas-bg);
+    color: var(--admin-text-muted);
+    border: 1px solid var(--admin-border);
+}
+
 /* Moderation Queue Items (Sopan Pro System) */
 .queue-item {
     padding: 14px 16px;

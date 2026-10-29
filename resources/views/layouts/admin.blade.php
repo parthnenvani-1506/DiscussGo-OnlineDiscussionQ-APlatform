@@ -25,7 +25,7 @@
 
     <!-- Custom Design System -->
     <link href="{{ asset('css/app.css') }}?v=5.2" rel="stylesheet">
-    <link href="{{ asset('css/admin.css') }}?v=2.3" rel="stylesheet">
+    <link href="{{ asset('css/admin.css') }}?v=2.6" rel="stylesheet">
 
     <!-- Prevent Flash of Uncollapsed Sidebar -->
     <script>
@@ -197,7 +197,7 @@
             </button>
             <h1 class="navbar-page-title mb-0">
                 @php
-                    $rawTitle = trim($__env->yieldContent('title'));
+                    $rawTitle = html_entity_decode(trim($__env->yieldContent('title')), ENT_QUOTES, 'UTF-8');
                     $displayTitle = explode(' - ', $rawTitle)[0] ?? 'Admin Console';
                     if (empty($displayTitle)) $displayTitle = 'Admin Dashboard';
                 @endphp
