@@ -79,7 +79,7 @@
                             @if($user->is_suspended)
                                 <span class="badge bg-danger">Suspended</span>
                             @elseif($user->role === 'moderator')
-                                <span class="badge bg-warning text-dark"><i class="bi bi-shield-half me-1"></i>Moderator</span>
+                                <span class="badge bg-warning text-dark"><i class="bi bi-shield-shaded me-1"></i>Moderator</span>
                             @else
                                 <span class="badge bg-success">Active</span>
                             @endif

@@ -64,7 +64,7 @@ class DashboardController extends Controller
         $recentMessages = ContactMessage::latest()->take(5)->get();
 
         // Pending reports
-        $pendingReports = Report::with(['reporter'])->where('status', 'pending')->latest()->take(5)->get();
+        $pendingReports = Report::with(['reporter', 'reportable'])->where('status', 'pending')->latest()->take(5)->get();
 
         return view('admin.dashboard', compact(
             'kpis',

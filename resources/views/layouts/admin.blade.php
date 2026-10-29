@@ -25,7 +25,7 @@
 
     <!-- Custom Design System -->
     <link href="{{ asset('css/app.css') }}?v=5.2" rel="stylesheet">
-    <link href="{{ asset('css/admin.css') }}?v=2.0" rel="stylesheet">
+    <link href="{{ asset('css/admin.css') }}?v=2.3" rel="stylesheet">
 
     <!-- Prevent Flash of Uncollapsed Sidebar -->
     <script>
